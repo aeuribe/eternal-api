@@ -3,7 +3,7 @@
     public class Order
     {
         // ID único de Order
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         // Fecha de creación de la orden
         public DateTime CreateAt { get; set; }

@@ -3,7 +3,7 @@
     public class Bill
     {
         // ID único de bill
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         // Fecha de creación
         public DateTime CreatedAt { get; set; }
@@ -11,14 +11,28 @@
         // Monto total
         public decimal Total { get; set; }
 
-        // Dirección de la imagen
-        public string ImageUrl { get; set; }
-
         // Clave foránea de la orden asociada
-        public int OrderId { get; set; }
+        public Guid OrderId { get; set; }
+
+        // Propiedad de navegación
+        public Order Order { get; set; }
+        
+        // Lista de detalles de la factura
+        public ICollection<BillDetail> BillDetails { get; set; } = new List<BillDetail>();
 
         // Clave foranea de POD asociado
-        public int PodId { get; set; }
+        public Guid? PodId { get; set; }
+
+        // Propiedad de navegación
+        public POD? POD { get; set; }
+
+        public Bill(Guid orderId, decimal total)
+        {
+            Id = Guid.NewGuid();
+            CreatedAt = DateTime.UtcNow;
+            OrderId = orderId;
+            Total = total;
+        }
 
     }
 }
