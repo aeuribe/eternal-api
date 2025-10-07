@@ -3,7 +3,7 @@
     public class HistPrice
     {
         // ID único del historial de precios
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         // Fecha de asignaciön de precios
         public DateTime StartDate { get; set; }
@@ -15,7 +15,15 @@
         public decimal Price { get; set; } = 0;
 
         // Referencia foránea al producto
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
 
+        public HistPrice(Guid productId, decimal value, DateTime startDate, DateTime? endDate = null)
+        {
+            ProductId = productId;
+            Price = value;
+            StartDate = startDate;
+            EndDate = endDate;
+        }
+        public HistPrice() { }
     }
 }

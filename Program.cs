@@ -1,7 +1,7 @@
-using eternal_api.Application.Bills.Commands.CreateBill;
-using eternal_api.Application.Bills.Queries.GetBillById;
-using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Common.Interfaces;
 using eternal_api.Infraestructure.Persistence;
+using eternal_api.Infrastructure.Persistence;
+
 using eternal_api.WebAPI.Endpoints;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +14,7 @@ var connString = builder.Configuration.GetConnectionString("DefaultConnection");
 var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
 if (string.IsNullOrEmpty(password))
 {
-    throw new Exception("La variable de entorno DB_PASSWORD no est� definida.");
+    throw new Exception("La variable de entorno DB_PASSWORD no está definida.");
 }
 connString = connString.Replace("{DB_PASSWORD}", password);
 
@@ -25,9 +25,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Add services to the container.
 // Services for Bill
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IHistPriceRepository, HistPriceRepository>();
 builder.Services.AddScoped<IBillRepository, BillRepository>();
-builder.Services.AddScoped<CreateBillHandler>();
-builder.Services.AddScoped<GetBillByIdHandler>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<IStoreRepository, StoreRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IVisitLogRepository, VisitLogRepository>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -51,5 +56,14 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// 🔧 Endpoints
+app.MapProductEndpoints();
+app.MapHistPriceEndpoints();
+app.MapBillEndpoints();
+app.MapCityEndpoints();
+app.MapStoreEndpoints();
+app.MapUserEndpoints();
+app.MapVisitLogEndpoints();
 
 app.Run();

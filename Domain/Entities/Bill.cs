@@ -7,7 +7,7 @@
 
         // Fecha de creación
         public DateTime CreatedAt { get; set; }
-        
+
         // Monto total
         public decimal Total { get; set; }
 
@@ -16,7 +16,7 @@
 
         // Propiedad de navegación
         public Order Order { get; set; }
-        
+
         // Lista de detalles de la factura
         public ICollection<BillDetail> BillDetails { get; set; } = new List<BillDetail>();
 

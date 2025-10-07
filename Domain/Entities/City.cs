@@ -2,13 +2,9 @@
 {
     public class City
     {
-        // ID único de ciudad
-        public int Id { get; set; }
-
-        // Nombre de la ciudad
-        public string Name { get; set; }
-
-        // Estado o provincia donde se encuentra la ciudad
-        public string State { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Name { get; set; } = string.Empty;
+        public string State { get; set; } = string.Empty;
+        public string Country { get; set; } = string.Empty;
     }
 }
