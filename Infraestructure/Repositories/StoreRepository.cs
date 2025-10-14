@@ -1,8 +1,9 @@
 ﻿using eternal_api.Application.Common.Interfaces;
 using eternal_api.Domain.Entities;
+using eternal_api.Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace eternal_api.Infraestructure.Persistence
+namespace eternal_api.Infraestructure.Repositories
 {
     public class StoreRepository : IStoreRepository
     {

@@ -3,7 +3,7 @@ using eternal_api.Domain.Entities;
 using eternal_api.Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace eternal_api.Infrastructure.Persistence
+namespace eternal_api.Infraestructure.Repositories
 {
     public class UserRepository : IUserRepository
     {

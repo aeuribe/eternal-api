@@ -1,7 +1,6 @@
 ﻿using eternal_api.Application.Common.Interfaces;
 using eternal_api.Infraestructure.Persistence;
-using eternal_api.Infrastructure.Persistence;
-
+using eternal_api.Infraestructure.Repositories;
 using eternal_api.WebAPI.Endpoints;
 using Microsoft.EntityFrameworkCore;
 
