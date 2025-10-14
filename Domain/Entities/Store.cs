@@ -3,7 +3,7 @@
     public class Store
     {
         // ID único de la tienda
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         // Nombre de la tienda
         public string Name { get; set; }
@@ -15,7 +15,7 @@
         public bool IsActive { get; set; }
 
         // Relación con la entidad City
-        public int CityId { get; set; }
+        public Guid CityId { get; set; }
 
     }
 }

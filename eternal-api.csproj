@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <Folder Include="Infraestructure\Services\" />
-    <Folder Include="Infraestructure\Repositories\" />
     <Folder Include="Migrations\" />
     <Folder Include="Test\" />
   </ItemGroup>

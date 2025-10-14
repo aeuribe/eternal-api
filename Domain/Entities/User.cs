@@ -3,7 +3,7 @@
     public class User
     {
         // ID único del usuario
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         // Nombre del usuario
         public string Name { get; set; }
@@ -18,6 +18,8 @@
         public string Phone { get; set; }
 
         // Relación con la entidad City
-        public int CityId { get; set; }
+        public Guid CityId { get; set; }
+        
+        public bool IsActive { get; set; } = true;
     }
 }
