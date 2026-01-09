@@ -33,6 +33,11 @@ namespace eternal_api.Infraestructure.Repositories
 
         public async Task<List<Store>> ListAsync() =>
             await _context.Stores.ToListAsync();
+
+        public async Task<bool> ExistsAsync(Guid id)
+        {
+            return await _context.Stores.AnyAsync(o => o.Id == id);
+        }
     }
 
 }

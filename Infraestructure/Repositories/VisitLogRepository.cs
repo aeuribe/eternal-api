@@ -42,6 +42,11 @@ namespace eternal_api.Infraestructure.Repositories
                 .Include(v => v.Salesperson)
                 .ToListAsync();
         }
+
+        public async Task<VisitLog> GetVisitLogByIdAsync(Guid id)
+        {
+            return await _context.VisitLogs.FindAsync(id);
+        }
     }
 }
 

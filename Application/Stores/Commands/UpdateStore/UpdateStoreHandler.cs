@@ -1,27 +1,26 @@
 ﻿
 using eternal_api.Application.Common.Interfaces;
+using MediatR;
 
 namespace eternal_api.Application.Stores.Commands.UpdateStore
 {
-    public class UpdateStoreHandler
+    public class UpdateStoreHandler : IRequestHandler<UpdateStoreCommand, bool>
     {
-        private readonly IStoreRepository _repo;
+        private readonly IStoreRepository _storeRepository;
 
-        public UpdateStoreHandler(IStoreRepository repo)
+        public UpdateStoreHandler(IStoreRepository storeRepository)
         {
-            _repo = repo;
+            _storeRepository = storeRepository;
         }
 
-        public async Task<bool> Handle(UpdateStoreCommand command)
+        public async Task<bool> Handle(UpdateStoreCommand command, CancellationToken cancellationToken)
         {
-            var store = await _repo.GetByIdAsync(command.Id);
+            var store = await _storeRepository.GetByIdAsync(command.Id);
             if (store is null) return false;
 
-            store.Name = command.Name;
-            store.Address = command.Address;
-            store.CityId = command.CityId;
+            store.Update(command.Name, command.Address, command.CityId);
 
-            await _repo.UpdateAsync(store);
+            await _storeRepository.UpdateAsync(store);
             return true;
         }
     }

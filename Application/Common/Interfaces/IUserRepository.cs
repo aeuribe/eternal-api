@@ -8,5 +8,6 @@ namespace eternal_api.Application.Common.Interfaces
         Task UpdateAsync(User user);
         Task<User?> GetByIdAsync(Guid id);
         Task<List<User>> ListAsync();
+        Task<bool> ExistsAsync(Guid id);
     }
 }

@@ -1,16 +1,19 @@
 ﻿using eternal_api.Application.Common.DTOs;
 using eternal_api.Application.Common.Interfaces;
+using MediatR;
 
 namespace eternal_api.Application.Stores.Queries.GetStoreById
 {
-    public class GetStoreByIdHandler
+    public class GetStoreByIdHandler : IRequestHandler<GetStoreByIdQuery, StoreDto>
     {
-        private readonly IStoreRepository _repo;
-        public GetStoreByIdHandler(IStoreRepository repo) => _repo = repo;
-
-        public async Task<StoreDto?> Handle(GetStoreByIdQuery query)
+        private readonly IStoreRepository _storeRepository;
+        public GetStoreByIdHandler(IStoreRepository storeRepository)
         {
-            var store = await _repo.GetByIdAsync(query.Id);
+            _storeRepository = storeRepository;
+        }
+        public async Task<StoreDto?> Handle(GetStoreByIdQuery query, CancellationToken cancellationToken)
+        {
+            var store = await _storeRepository.GetByIdAsync(query.Id);
             return store is null ? null : new StoreDto
             {
                 Id = store.Id,

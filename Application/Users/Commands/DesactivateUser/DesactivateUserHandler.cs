@@ -1,24 +1,26 @@
 ﻿using eternal_api.Application.Common.Interfaces;
 using eternal_api.Domain.Entities;
+using MediatR;
 
 namespace eternal_api.Application.Users.Commands.DeactivateUser
 {
-    public class DesactivateUserHandler
+    public class DesactivateUserHandler : IRequestHandler<DesactivateUserCommand, bool>
     {
-        private readonly IUserRepository _repo;
+        private readonly IUserRepository _userRepository;
 
-        public DesactivateUserHandler(IUserRepository repo)
+        public DesactivateUserHandler(IUserRepository userRepository)
         {
-            _repo = repo;
+            _userRepository = userRepository;
         }
 
-        public async Task<bool> Handle(DesactivateUserCommand command)
+        public async Task<bool> Handle(DesactivateUserCommand command, CancellationToken cancellationToken)
         {
-            var user = await _repo.GetByIdAsync(command.Id);
+            var user = await _userRepository.GetByIdAsync(command.Id);
             if (user is null) return false;
 
-            user.IsActive = false;
-            await _repo.UpdateAsync(user);
+            user.Desactivate();
+
+            await _userRepository.UpdateAsync(user);
             return true;
         }
     }

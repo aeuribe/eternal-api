@@ -1,9 +1,10 @@
 ﻿using eternal_api.Application.Common.Interfaces;
 using eternal_api.Domain.Entities;
+using MediatR;
 
 namespace eternal_api.Application.Prices.Commands.RegisterHistPrice
 {
-    public class RegisterHistPriceHandler
+    public class RegisterHistPriceHandler : IRequestHandler<RegisterHistPriceCommand, Guid>
     {
         private readonly IHistPriceRepository _histPriceRepository;
 
@@ -12,7 +13,7 @@ namespace eternal_api.Application.Prices.Commands.RegisterHistPrice
             _histPriceRepository = histPriceRepository;
         }
 
-        public async Task<Guid> Handle(RegisterHistPriceCommand command)
+        public async Task<Guid> Handle(RegisterHistPriceCommand command, CancellationToken cancellationToken)
         {
             var price = new HistPrice
             {

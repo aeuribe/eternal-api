@@ -1,10 +1,11 @@
 ﻿using eternal_api.Application.Bills.Queries.GetBillById;
 using eternal_api.Application.Common.DTOs;
 using eternal_api.Application.Common.Interfaces;
+using MediatR;
 
 namespace eternal_api.Application.Products.Queries.GetProductById
 {
-    public class GetProductByIdHandler
+    public class GetProductByIdHandler : IRequestHandler<GetProductByIdQuery, ProductDto>
     {
         private readonly IProductRepository _productRepository;
 
@@ -13,7 +14,7 @@ namespace eternal_api.Application.Products.Queries.GetProductById
             _productRepository = productRepository;
         }
 
-        public async Task<ProductDto?> Handle(GetProductByIdQuery query)
+        public async Task<ProductDto?> Handle(GetProductByIdQuery query, CancellationToken cancellationToken)
         {
             var product = await _productRepository.GetByIdAsync(query.Id);
             return product is null ? null : new ProductDto

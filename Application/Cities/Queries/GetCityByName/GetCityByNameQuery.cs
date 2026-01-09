@@ -1,6 +1,9 @@
-﻿namespace eternal_api.Application.Cities.Queries.GetCityByName
+﻿using eternal_api.Application.Common.DTOs;
+using MediatR;
+
+namespace eternal_api.Application.Cities.Queries.GetCityByName
 {
-    public class GetCityByNameQuery
+    public class GetCityByNameQuery : IRequest<CityDto>
     {
         public string Name { get; set; } = string.Empty;
     }

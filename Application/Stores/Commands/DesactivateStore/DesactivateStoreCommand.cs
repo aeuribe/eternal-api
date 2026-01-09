@@ -1,6 +1,8 @@
-﻿namespace eternal_api.Application.Stores.Commands.DesactivateStore
+﻿using MediatR;
+
+namespace eternal_api.Application.Stores.Commands.DesactivateStore
 {
-    public class DesactivateStoreCommand
+    public class DesactivateStoreCommand : IRequest<bool>
     {
         public Guid Id { get; set; }
     }

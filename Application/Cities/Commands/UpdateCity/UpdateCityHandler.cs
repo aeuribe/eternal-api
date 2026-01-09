@@ -1,26 +1,25 @@
 ﻿using eternal_api.Application.Common.Interfaces;
+using MediatR;
 
 namespace eternal_api.Application.Cities.Commands.UpdateCity
 {
-    public class UpdateCityHandler
+    public class UpdateCityHandler : IRequestHandler<UpdateCityCommand, bool>
     {
-        private readonly ICityRepository _repo;
+        private readonly ICityRepository _cityRepository;
 
-        public UpdateCityHandler(ICityRepository repo)
+        public UpdateCityHandler(ICityRepository cityRepository)
         {
-            _repo = repo;
+            _cityRepository = cityRepository;
         }
 
-        public async Task<bool> Handle(UpdateCityCommand command)
+        public async Task<bool> Handle(UpdateCityCommand command, CancellationToken cancellationToken)
         {
-            var city = await _repo.GetByIdAsync(command.Id);
+            var city = await _cityRepository.GetByIdAsync(command.Id);
             if (city is null) return false;
 
-            city.Name = command.Name;
-            city.State = command.State;
-            city.Country = command.Country;
+            city.Update(command.Name, command.State, command.Country);
 
-            await _repo.UpdateAsync(city);
+            await _cityRepository.UpdateAsync(city);
             return true;
         }
     }

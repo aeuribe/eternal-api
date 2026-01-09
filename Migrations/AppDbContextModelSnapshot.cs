@@ -22,7 +22,88 @@ namespace eternal_api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("eternal_api.Domain.Entities.Bill", b =>
+            modelBuilder.Entity("eternal_api.Domain.Entities.City", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CITY", (string)null);
+                });
+
+            modelBuilder.Entity("eternal_api.Domain.Entities.Distribution", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("ID");
+
+                    b.Property<Guid>("PlanogramId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("PLANOGRAM_ID");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("PRODUCT_ID");
+
+                    b.Property<int>("Xposition")
+                        .HasColumnType("integer")
+                        .HasColumnName("X_POSITION");
+
+                    b.Property<int>("Yposition")
+                        .HasColumnType("integer")
+                        .HasColumnName("Y_POSITION");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanogramId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("DISTRIBUTION", (string)null);
+                });
+
+            modelBuilder.Entity("eternal_api.Domain.Entities.HistPrice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HIST_PRICE", (string)null);
+                });
+
+            modelBuilder.Entity("eternal_api.Domain.Entities.Invoice", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,159 +131,106 @@ namespace eternal_api.Migrations
                     b.HasIndex("PodId")
                         .IsUnique();
 
-                    b.ToTable("Bills");
+                    b.ToTable("INVOICE", (string)null);
                 });
 
-            modelBuilder.Entity("eternal_api.Domain.Entities.BillDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BillId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("BillId1")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("SubTotal")
-                        .HasColumnType("real");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BillId1");
-
-                    b.ToTable("BillDetails");
-                });
-
-            modelBuilder.Entity("eternal_api.Domain.Entities.City", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cities");
-                });
-
-            modelBuilder.Entity("eternal_api.Domain.Entities.Distribution", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("PlanogramId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Xposition")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Yposition")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Distributions");
-                });
-
-            modelBuilder.Entity("eternal_api.Domain.Entities.HistPrice", b =>
+            modelBuilder.Entity("eternal_api.Domain.Entities.InvoiceDetail", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("ID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<Guid>("InvoiceId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("INVOICE_ID");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("PRODUCT_ID");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("QUANTITY");
+
+                    b.Property<float>("SubTotal")
+                        .HasColumnType("real")
+                        .HasColumnName("SUBTOTAL");
 
                     b.HasKey("Id");
 
-                    b.ToTable("HIST_PRICE", (string)null);
+                    b.HasIndex("InvoiceId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("INVOICE_DETAIL", (string)null);
                 });
 
             modelBuilder.Entity("eternal_api.Domain.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("ID");
 
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("CREATED_AT");
 
                     b.Property<string>("PO")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("PO");
 
-                    b.Property<int>("SalespersonId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("SalespersonId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("SALESPERSON_ID");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("STATUS");
 
-                    b.Property<int>("StoreId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("STORE_ID");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.HasIndex("SalespersonId");
+
+                    b.HasIndex("StoreId");
+
+                    b.ToTable("ORDER", (string)null);
                 });
 
             modelBuilder.Entity("eternal_api.Domain.Entities.OrderDetail", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid")
+                        .HasColumnName("ID");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ORDER_ID");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("PRODUCT_ID");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("QUANTITY");
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrderDetails");
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ORDER_DETAIL", (string)null);
                 });
 
             modelBuilder.Entity("eternal_api.Domain.Entities.POD", b =>
@@ -212,7 +240,6 @@ namespace eternal_api.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -222,21 +249,23 @@ namespace eternal_api.Migrations
 
             modelBuilder.Entity("eternal_api.Domain.Entities.Planogram", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");
 
                     b.Property<bool>("isActive")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.HasKey("Id");
 
-                    b.ToTable("Planograms");
+                    b.ToTable("Planograms", (string)null);
                 });
 
             modelBuilder.Entity("eternal_api.Domain.Entities.Product", b =>
@@ -272,112 +301,204 @@ namespace eternal_api.Migrations
 
             modelBuilder.Entity("eternal_api.Domain.Entities.Store", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
-                    b.Property<int>("CityId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("CityId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stores");
+                    b.ToTable("STORE", (string)null);
                 });
 
             modelBuilder.Entity("eternal_api.Domain.Entities.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("CityId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("CityId")
-                        .HasColumnType("integer");
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("Rol")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("USER", (string)null);
                 });
 
             modelBuilder.Entity("eternal_api.Domain.Entities.VisitLog", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("SalespersonId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("SalespersonId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("StoreId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("VisitDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("VisitDate")
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
-                    b.ToTable("VisitLogs");
+                    b.HasIndex("SalespersonId");
+
+                    b.HasIndex("StoreId");
+
+                    b.ToTable("visit_logs", (string)null);
                 });
 
-            modelBuilder.Entity("eternal_api.Domain.Entities.Bill", b =>
+            modelBuilder.Entity("eternal_api.Domain.Entities.Distribution", b =>
+                {
+                    b.HasOne("eternal_api.Domain.Entities.Planogram", null)
+                        .WithMany()
+                        .HasForeignKey("PlanogramId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("eternal_api.Domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("eternal_api.Domain.Entities.Invoice", b =>
                 {
                     b.HasOne("eternal_api.Domain.Entities.Order", "Order")
                         .WithOne()
-                        .HasForeignKey("eternal_api.Domain.Entities.Bill", "OrderId")
+                        .HasForeignKey("eternal_api.Domain.Entities.Invoice", "OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("eternal_api.Domain.Entities.POD", "POD")
                         .WithOne()
-                        .HasForeignKey("eternal_api.Domain.Entities.Bill", "PodId");
+                        .HasForeignKey("eternal_api.Domain.Entities.Invoice", "PodId");
 
                     b.Navigation("Order");
 
                     b.Navigation("POD");
                 });
 
-            modelBuilder.Entity("eternal_api.Domain.Entities.BillDetail", b =>
+            modelBuilder.Entity("eternal_api.Domain.Entities.InvoiceDetail", b =>
                 {
-                    b.HasOne("eternal_api.Domain.Entities.Bill", null)
-                        .WithMany("BillDetails")
-                        .HasForeignKey("BillId1");
+                    b.HasOne("eternal_api.Domain.Entities.Invoice", null)
+                        .WithMany("invoiceDetails")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eternal_api.Domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("eternal_api.Domain.Entities.Bill", b =>
+            modelBuilder.Entity("eternal_api.Domain.Entities.Order", b =>
                 {
-                    b.Navigation("BillDetails");
+                    b.HasOne("eternal_api.Domain.Entities.User", "Salesperson")
+                        .WithMany()
+                        .HasForeignKey("SalespersonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("eternal_api.Domain.Entities.Store", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Salesperson");
+
+                    b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("eternal_api.Domain.Entities.OrderDetail", b =>
+                {
+                    b.HasOne("eternal_api.Domain.Entities.Order", null)
+                        .WithMany("orderDetails")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eternal_api.Domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("eternal_api.Domain.Entities.VisitLog", b =>
+                {
+                    b.HasOne("eternal_api.Domain.Entities.User", "Salesperson")
+                        .WithMany()
+                        .HasForeignKey("SalespersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eternal_api.Domain.Entities.Store", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Salesperson");
+
+                    b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("eternal_api.Domain.Entities.Invoice", b =>
+                {
+                    b.Navigation("invoiceDetails");
+                });
+
+            modelBuilder.Entity("eternal_api.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("orderDetails");
                 });
 #pragma warning restore 612, 618
         }

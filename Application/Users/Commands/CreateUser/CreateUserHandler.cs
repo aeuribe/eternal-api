@@ -1,30 +1,22 @@
 ﻿using eternal_api.Domain.Entities;
 using eternal_api.Application.Common.Interfaces;
+using MediatR;
 
 namespace eternal_api.Application.Users.Commands.CreateUser
 {
-    public class CreateUserHandler
+    public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid>
     {
-        private readonly IUserRepository _repo;
+        private readonly IUserRepository _userRepository;
 
-        public CreateUserHandler(IUserRepository repo)
+        public CreateUserHandler(IUserRepository userRepository)
         {
-            _repo = repo;
+            _userRepository = userRepository;
         }
 
-        public async Task<Guid> Handle(CreateUserCommand command)
+        public async Task<Guid> Handle(CreateUserCommand command, CancellationToken cancellationToken)
         {
-            var user = new User
-            {
-                Name = command.Name,
-                LastName = command.LastName,
-                Rol = command.Rol,
-                Phone = command.Phone,
-                CityId = command.CityId,
-                IsActive = command.IsActive
-            };
-
-            await _repo.AddAsync(user);
+            var user = new User(command.Name, command.LastName, command.Rol, command.Phone, command.CityId);
+            await _userRepository.AddAsync(user);
             return user.Id;
         }
     }

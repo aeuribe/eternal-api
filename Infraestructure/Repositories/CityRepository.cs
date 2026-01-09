@@ -34,6 +34,11 @@ namespace eternal_api.Infraestructure.Repositories
 
         public async Task<List<City>> ListAsync() =>
             await _context.Cities.ToListAsync();
+
+        public async Task<bool> ExistsAsync(Guid id)
+        {
+            return await _context.Cities.AnyAsync(o => o.Id == id);
+        }
     }
 
 

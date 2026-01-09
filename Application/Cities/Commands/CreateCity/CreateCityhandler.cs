@@ -1,9 +1,10 @@
 ﻿using eternal_api.Application.Common.Interfaces;
 using eternal_api.Domain.Entities;
+using MediatR;
 
 namespace eternal_api.Application.Cities.Commands.CreateCity
 {
-    public class CreateCityHandler
+    public class CreateCityHandler : IRequestHandler<CreateCityCommand, Guid>
     {
         private readonly ICityRepository _cityRepository;
 
@@ -12,14 +13,9 @@ namespace eternal_api.Application.Cities.Commands.CreateCity
             _cityRepository = cityRepository;
         }
 
-        public async Task<Guid> Handle(CreateCityCommand command)
+        public async Task<Guid> Handle(CreateCityCommand command, CancellationToken cancellationToken)
         {
-            var city = new City
-            {
-                Name = command.Name,
-                State = command.State,
-                Country = command.Country
-            };
+            var city = new City(command.Name, command.State, command.Country);
 
             await _cityRepository.AddAsync(city);
             return city.Id;

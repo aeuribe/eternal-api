@@ -3,6 +3,7 @@ using eternal_api.Application.VisitLogs.Commands.UpdateVisitLog;
 using eternal_api.Application.VisitLogs.Commands.DeleteVisitLog;
 using eternal_api.Application.VisitLogs.Queries.ListVisitLogs;
 using eternal_api.Application.VisitLogs.Common;
+using MediatR;
 
 namespace eternal_api.WebAPI.Endpoints
 {
@@ -11,40 +12,33 @@ namespace eternal_api.WebAPI.Endpoints
         public static void MapVisitLogEndpoints(this IEndpointRouteBuilder app)
         {
             // 📌 Registrar visita
-            app.MapPost("/visit-logs", async (
-                CreateVisitLogCommand command,
-                CreateVisitLogHandler handler) =>
+            app.MapPost("/visit-logs", async ( CreateVisitLogCommand command, IMediator mediator) =>
             {
-                var result = await handler.Handle(command);
+                var result = await mediator.Send(command);
                 return Results.Created($"/visit-logs/{result}", result);
             });
 
             // 📌 Consultar historial de visitas
-            app.MapGet("/visit-logs", async (
-                ListVisitLogsHandler handler) =>
+            app.MapGet("/visit-logs", async ( IMediator mediator) =>
             {
-                var result = await handler.Handle(new ListVisitLogsQuery());
+                var query = new GetAllVisitLogsQuery();
+                var result = await mediator.Send(query);
                 return Results.Ok(result);
             });
 
             // 📌 Corregir visita
-            app.MapPut("/visit-logs/{id}", async (
-                Guid id,
-                UpdateVisitLogCommand command,
-                UpdateVisitLogHandler handler) =>
+            app.MapPut("/visit-logs/{id}", async ( Guid id, UpdateVisitLogCommand command, IMediator mediator) =>
             {
                 command.Id = id;
-                var success = await handler.Handle(command);
+                var success = await mediator.Send(command);
                 return success ? Results.NoContent() : Results.NotFound();
             });
 
             // 📌 Anular visita
-            app.MapDelete("/visit-logs/{id}", async (
-                Guid id,
-                DeleteVisitLogHandler handler) =>
+            app.MapDelete("/visit-logs/{id}", async ( Guid id, IMediator mediator) =>
             {
                 var command = new DeleteVisitLogCommand { Id = id };
-                var success = await handler.Handle(command);
+                var success = await mediator.Send(command);
                 return success ? Results.NoContent() : Results.NotFound();
             });
         }

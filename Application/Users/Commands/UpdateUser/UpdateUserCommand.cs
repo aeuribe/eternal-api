@@ -1,6 +1,8 @@
-﻿namespace eternal_api.Application.Users.Commands.UpdateUser
+﻿using MediatR;
+
+namespace eternal_api.Application.Users.Commands.UpdateUser
 {
-    public class UpdateUserCommand
+    public class UpdateUserCommand : IRequest<bool>
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;

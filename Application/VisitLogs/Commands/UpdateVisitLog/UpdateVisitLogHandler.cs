@@ -1,28 +1,22 @@
 ﻿using eternal_api.Application.Common.Interfaces;
 using eternal_api.Domain.Entities;
+using MediatR;
 
 namespace eternal_api.Application.VisitLogs.Commands.UpdateVisitLog
 {
-    public class UpdateVisitLogHandler
+    public class UpdateVisitLogHandler : IRequestHandler<UpdateVisitLogCommand, bool>
     {
-        private readonly IVisitLogRepository _repo;
+        private readonly IVisitLogRepository _visitLogRepository;
 
-        public UpdateVisitLogHandler(IVisitLogRepository repo)
+        public UpdateVisitLogHandler(IVisitLogRepository visitLogRepository)
         {
-            _repo = repo;
+            _visitLogRepository = visitLogRepository;
         }
 
-        public async Task<bool> Handle(UpdateVisitLogCommand command)
+        public async Task<bool> Handle(UpdateVisitLogCommand command, CancellationToken cancellationToken)
         {
-            var visit = new VisitLog
-            {
-                Id = command.Id,
-                StoreId = command.StoreId,
-                SalespersonId = command.SalespersonId,
-                VisitDate = command.VisitDate
-            };
-
-            return await _repo.UpdateAsync(visit);
+            var visitLog = await _visitLogRepository.GetVisitLogByIdAsync(command.Id);
+            return await _visitLogRepository.UpdateAsync(visitLog);
         }
     }
 }

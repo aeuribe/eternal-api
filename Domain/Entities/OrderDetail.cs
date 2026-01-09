@@ -3,16 +3,31 @@
     public class OrderDetail
     {
         // ID único del detalle de la orden
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
        // Cantidad de producto
         public int Quantity { get; set; }
 
         // Clave foranea de Order asociada
-        public int OrderId  { get; set; }
+        public Guid OrderId  { get; set; }
 
         // Clave foranea de Producto asociado
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
 
+        public OrderDetail(int quantity, Guid orderId, Guid productId)
+        {
+            Quantity = quantity;
+            OrderId = orderId;
+            ProductId = productId;
+        }
+
+        public void Update(int quantity, Guid orderId, Guid productId)
+        {
+            Quantity = quantity;
+            OrderId = orderId;
+            ProductId = productId;
+        }
     }
+
+
 }

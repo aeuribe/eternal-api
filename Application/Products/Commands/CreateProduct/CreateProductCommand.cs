@@ -1,6 +1,8 @@
-﻿namespace eternal_api.Application.Products.Commands.CreateProduct
+﻿using MediatR;
+
+namespace eternal_api.Application.Products.Commands.CreateProduct
 {
-    public class CreateProductCommand
+    public class CreateProductCommand: IRequest<Guid>
     {
         public string Name { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;

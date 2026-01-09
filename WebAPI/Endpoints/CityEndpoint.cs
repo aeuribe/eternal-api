@@ -3,6 +3,7 @@ using eternal_api.Application.Cities.Commands.UpdateCity;
 using eternal_api.Application.Cities.Queries.GetCityByIdQuery;
 using eternal_api.Application.Cities.Queries.GetCityByName;
 using eternal_api.Application.Cities.Queries.ListCities;
+using MediatR;
 
 namespace eternal_api.WebAPI.Endpoints
 {
@@ -10,34 +11,37 @@ namespace eternal_api.WebAPI.Endpoints
     {
         public static void MapCityEndpoints(this IEndpointRouteBuilder app)
         {
-            app.MapPost("/cities", async (CreateCityCommand command, CreateCityHandler handler) =>
+            app.MapPost("/cities", async (CreateCityCommand command, IMediator mediator) =>
             {
-                var result = await handler.Handle(command);
+                var result = await mediator.Send(command);
                 return Results.Created($"/cities/{result}", result);
             });
 
-            app.MapPut("/cities/{id}", async (Guid id, UpdateCityCommand command, UpdateCityHandler handler) =>
+            app.MapPut("/cities/{id:guid}", async (Guid id, UpdateCityCommand command, IMediator mediator) =>
             {
                 command.Id = id;
-                var success = await handler.Handle(command);
-                return success ? Results.NoContent() : Results.NotFound();
+                var result = await mediator.Send(command);
+                return result ? Results.NoContent() : Results.NotFound();
             });
 
-            app.MapGet("/cities/{id}", async (Guid id, GetCityByIdHandler handler) =>
+            app.MapGet("/cities/{id:guid}", async (Guid id, IMediator mediator) =>
             {
-                var result = await handler.Handle(new GetCityByIdQuery { Id = id });
+                var query = new GetCityByIdQuery { Id = id };
+                var result = await mediator.Send(query);
                 return result is null ? Results.NotFound() : Results.Ok(result);
             });
 
-            app.MapGet("/cities/by-name/{name}", async (string name, GetCityByNameHandler handler) =>
+            app.MapGet("/cities/by-name/{name}", async (string name, IMediator mediator) =>
             {
-                var result = await handler.Handle(new GetCityByNameQuery { Name = name });
+                var query = new GetCityByNameQuery { Name = name };
+                var result = await mediator.Send(query);
                 return result is null ? Results.NotFound() : Results.Ok(result);
             });
 
-            app.MapGet("/cities", async (ListCitiesHandler handler) =>
+            app.MapGet("/cities", async (IMediator mediator) =>
             {
-                var result = await handler.Handle(new ListCitiesQuery());
+                var query = new GetAllCitiesQuery();
+                var result = await mediator.Send(query);
                 return Results.Ok(result);
             });
         }

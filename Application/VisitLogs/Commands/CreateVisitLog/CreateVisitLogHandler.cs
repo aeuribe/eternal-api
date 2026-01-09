@@ -1,28 +1,22 @@
 ﻿using eternal_api.Application.Common.Interfaces;
 using eternal_api.Domain.Entities;
+using MediatR;
 
 namespace eternal_api.Application.VisitLogs.Commands.CreateVisitLog
 {
-    public class CreateVisitLogHandler
+    public class CreateVisitLogHandler : IRequestHandler<CreateVisitLogCommand, Guid>
     {
-        private readonly IVisitLogRepository _repository;
+        private readonly IVisitLogRepository _visitLogrepository;
 
-        public CreateVisitLogHandler(IVisitLogRepository repository)
+        public CreateVisitLogHandler(IVisitLogRepository visitLogrepository)
         {
-            _repository = repository;
+            _visitLogrepository = visitLogrepository;
         }
 
-        public async Task<Guid> Handle(CreateVisitLogCommand command)
+        public async Task<Guid> Handle(CreateVisitLogCommand command, CancellationToken cancellationToken)
         {
-            var entity = new VisitLog
-            {
-                Id = Guid.NewGuid(),
-                StoreId = command.StoreId,
-                SalespersonId = command.SalespersonId,
-                VisitDate = command.VisitDate
-            };
-
-            return await _repository.AddAsync(entity);
+            var visitLog = new VisitLog(command.VisitDate, command.SalespersonId, command.StoreId);
+            return await _visitLogrepository.AddAsync(visitLog);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace eternal_api.Domain.Entities
+﻿using System.Reflection.Metadata;
+
+namespace eternal_api.Domain.Entities
 {
     public class User
     {
@@ -21,5 +23,30 @@
         public Guid CityId { get; set; }
         
         public bool IsActive { get; set; } = true;
+
+        public User(string name, string lastName, string rol, string phone, Guid cityId)
+        {
+            Id = Guid.NewGuid();
+            IsActive = true;
+            Name = name;
+            LastName = lastName;
+            Rol = rol;
+            Phone = phone;
+            CityId = cityId;
+        }
+
+        public void Update(string name, string lastName, string rol, string phone, Guid cityId) 
+        {
+            Name = name;
+            LastName = lastName;
+            Rol = rol;
+            Phone = phone;
+            CityId = cityId;
+        }
+
+        public void Desactivate()
+        {
+            IsActive = false;
+        }
     }
 }

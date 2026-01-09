@@ -23,7 +23,7 @@
             Id = Guid.NewGuid();
             Name = name;
             Category = category;
-            SKU = SKU;
+            this.SKU = SKU;
         }
 
         public void Update(string name, string category, string sku)
@@ -35,6 +35,8 @@
 
         // Método de dominio (ejemplo de lógica interna)
         public void Deactivate() => isActive = false;
+
+        public void Activate() => isActive = true;
 
     }
 }

@@ -3,7 +3,7 @@
     public class Distribution
     {
         // ID único de la distribución
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         // Posicion X de la distribución
         public int Xposition { get; set; }
@@ -12,10 +12,27 @@
         public int Yposition { get; set; }
 
         // Planograma al que pertenece la distribución
-        public int PlanogramId { get; set; }
+        public Guid PlanogramId { get; set; }
 
         // Referencia foránea al producto
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
 
+        public Distribution(Guid productId, Guid planogramId, int Xposition, int Yposition)
+        {
+            ProductId = productId;
+            PlanogramId = planogramId;
+            this.Xposition = Xposition;
+            this.Yposition = Yposition;
+        }
+
+        public void Update(Guid productId, Guid planogramId, int Xpos, int Ypos)
+        {
+            ProductId = productId;
+            PlanogramId = planogramId;
+            Xposition = Xpos;
+            Yposition = Ypos;
+        }
     }
+
+    
 }

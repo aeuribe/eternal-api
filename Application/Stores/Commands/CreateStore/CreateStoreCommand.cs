@@ -1,6 +1,8 @@
-﻿namespace eternal_api.Application.Stores.Commands.CreateStore
+﻿using MediatR;
+
+namespace eternal_api.Application.Stores.Commands.CreateStore
 {
-    public class CreateStoreCommand
+    public class CreateStoreCommand : IRequest<Guid>
     {
         public string Name { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;

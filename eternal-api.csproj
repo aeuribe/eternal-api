@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="13.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8">
       <PrivateAssets>all</PrivateAssets>
@@ -19,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="Infraestructure\Services\" />
-    <Folder Include="Migrations\" />
     <Folder Include="Test\" />
   </ItemGroup>
 

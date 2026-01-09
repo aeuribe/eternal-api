@@ -1,9 +1,10 @@
 ﻿using eternal_api.Application.Common.Interfaces;
 using eternal_api.Application.Products.Commands.CreateProduct;
+using MediatR;
 
 namespace eternal_api.Application.Products.Commands.UpdateProduct
 {
-    public class UpdateProductHandler
+    public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, bool>
     {
         private readonly IProductRepository _productRepository;
 
@@ -12,7 +13,7 @@ namespace eternal_api.Application.Products.Commands.UpdateProduct
             _productRepository = productRepository;
         }
 
-        public async Task<bool> Handle(UpdateProductCommand command)
+        public async Task<bool> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
         {
             var product = await _productRepository.GetByIdAsync(command.Id);
             if (product is null) return false;

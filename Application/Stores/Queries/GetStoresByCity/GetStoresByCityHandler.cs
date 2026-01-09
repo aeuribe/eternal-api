@@ -1,16 +1,19 @@
 ﻿using eternal_api.Application.Common.DTOs;
 using eternal_api.Application.Common.Interfaces;
+using MediatR;
 
 namespace eternal_api.Application.Stores.Queries.GetStoresByCity
 {
-    public class GetStoresByCityHandler
+    public class GetStoresByCityHandler : IRequestHandler<GetStoresByCityQuery, IEnumerable<StoreDto>>
     {
-        private readonly IStoreRepository _repo;
-        public GetStoresByCityHandler(IStoreRepository repo) => _repo = repo;
-
-        public async Task<List<StoreDto>> Handle(GetStoresByCityQuery query)
+        private readonly IStoreRepository _storeRepository;
+        public GetStoresByCityHandler(IStoreRepository storeRepository)
         {
-            var stores = await _repo.GetByCityAsync(query.CityId);
+            _storeRepository = storeRepository;
+        }
+        public async Task<IEnumerable<StoreDto>> Handle(GetStoresByCityQuery query, CancellationToken cancellationToken)
+        {
+            var stores = await _storeRepository.GetByCityAsync(query.CityId);
             return stores.Select(s => new StoreDto
             {
                 Id = s.Id,

@@ -8,6 +8,7 @@ namespace eternal_api.Application.Common.Interfaces
         Task UpdateAsync(City city);
         Task<City?> GetByIdAsync(Guid id);
         Task<City?> GetByNameAsync(string name);
+        Task<bool> ExistsAsync(Guid id);
         Task<List<City>> ListAsync();
     }
 }

@@ -1,20 +1,21 @@
 ﻿using eternal_api.Application.Common.DTOs;
 using eternal_api.Application.Common.Interfaces;
+using MediatR;
 
 namespace eternal_api.Application.Cities.Queries.GetCityByName
 {
-    public class GetCityByNameHandler
+    public class GetCityByNameHandler: IRequestHandler<GetCityByNameQuery, CityDto>
     {
-        private readonly ICityRepository _repo;
+        private readonly ICityRepository _cityRepository;
 
-        public GetCityByNameHandler(ICityRepository repo)
+        public GetCityByNameHandler(ICityRepository cityRepository)
         {
-            _repo = repo;
+            _cityRepository = cityRepository;
         }
 
-        public async Task<CityDto?> Handle(GetCityByNameQuery query)
+        public async Task<CityDto?> Handle(GetCityByNameQuery query, CancellationToken cancellationToken)
         {
-            var city = await _repo.GetByNameAsync(query.Name);
+            var city = await _cityRepository.GetByNameAsync(query.Name);
             return city is null ? null : new CityDto
             {
                 Id = city.Id,

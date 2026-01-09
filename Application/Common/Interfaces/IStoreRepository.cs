@@ -10,5 +10,6 @@ namespace eternal_api.Application.Common.Interfaces
         Task<Store?> GetByNameAsync(string name);
         Task<List<Store>> GetByCityAsync(Guid cityId);
         Task<List<Store>> ListAsync();
+        Task<bool> ExistsAsync(Guid id);
     }
 }

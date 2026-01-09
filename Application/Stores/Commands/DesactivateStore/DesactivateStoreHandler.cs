@@ -1,24 +1,25 @@
 ﻿
 using eternal_api.Application.Common.Interfaces;
+using MediatR;
 
 namespace eternal_api.Application.Stores.Commands.DesactivateStore
 {
-    public class DesactivateStoreHandler
+    public class DesactivateStoreHandler : IRequestHandler<DesactivateStoreCommand, bool>
     {
-        private readonly IStoreRepository _repo;
+        private readonly IStoreRepository _storeRepository;
 
-        public DesactivateStoreHandler(IStoreRepository repo)
+        public DesactivateStoreHandler(IStoreRepository storeRepository)
         {
-            _repo = repo;
+            _storeRepository = storeRepository;
         }
 
-        public async Task<bool> Handle(DesactivateStoreCommand command)
+        public async Task<bool> Handle(DesactivateStoreCommand command, CancellationToken cancellationToken)
         {
-            var store = await _repo.GetByIdAsync(command.Id);
+            var store = await _storeRepository.GetByIdAsync(command.Id);
             if (store is null) return false;
 
-            store.IsActive = false;
-            await _repo.UpdateAsync(store);
+            store.Desactivate();
+            await _storeRepository.UpdateAsync(store);
             return true;
         }
     }

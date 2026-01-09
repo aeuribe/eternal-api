@@ -9,8 +9,8 @@ namespace eternal_api.Infraestructure.Persistence
 
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderDetail> OrderDetails => Set<OrderDetail>();
-        public DbSet<Bill> Bills => Set<Bill>();
-        public DbSet<BillDetail> BillDetails => Set<BillDetail>();
+        public DbSet<Invoice> Bills => Set<Invoice>();
+        public DbSet<InvoiceDetail> BillDetails => Set<InvoiceDetail>();
         public DbSet<POD> PODs => Set<POD>();
         public DbSet<Product> Products => Set<Product>();
         public DbSet<HistPrice> HistPrices => Set<HistPrice>();

@@ -1,6 +1,8 @@
-﻿namespace eternal_api.Application.Users.Commands.CreateUser
+﻿using MediatR;
+
+namespace eternal_api.Application.Users.Commands.CreateUser
 {
-    public class CreateUserCommand
+    public class CreateUserCommand : IRequest<Guid>
     {
         public string Name { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;

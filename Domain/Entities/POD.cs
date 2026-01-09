@@ -2,11 +2,13 @@
 {
     public class POD
     {
-        // ID único de POD
         public Guid Id { get; set; }
+        public string? ImageUrl { get; set; }
 
-        // Dirección del archivo
-        public string ImageUrl { get; set; }
-
+        public POD(string imageUrl)
+        {
+            Id = Guid.NewGuid();
+            ImageUrl = imageUrl;
+        }
     }
 }

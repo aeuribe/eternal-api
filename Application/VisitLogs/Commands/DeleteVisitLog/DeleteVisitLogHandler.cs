@@ -1,21 +1,22 @@
 ﻿using eternal_api.Application.Common.Interfaces;
 using eternal_api.Infrastructure.Persistence;
+using MediatR;
 
 
 namespace eternal_api.Application.VisitLogs.Commands.DeleteVisitLog
 {
-    public class DeleteVisitLogHandler
+    public class DeleteVisitLogHandler : IRequestHandler<DeleteVisitLogCommand, bool>
     {
-        private readonly IVisitLogRepository _repo;
+        private readonly IVisitLogRepository _visitLogRepository;
 
-        public DeleteVisitLogHandler(IVisitLogRepository repo)
+        public DeleteVisitLogHandler(IVisitLogRepository visitLogRepository)
         {
-            _repo = repo;
+            _visitLogRepository = visitLogRepository;
         }
 
-        public async Task<bool> Handle(DeleteVisitLogCommand command)
+        public async Task<bool> Handle(DeleteVisitLogCommand command, CancellationToken cancellationToken)
         {
-            return await _repo.DeleteAsync(command.Id);
+            return await _visitLogRepository.DeleteAsync(command.Id);
         }
     }
 }

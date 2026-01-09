@@ -1,5 +1,8 @@
-﻿namespace eternal_api.Application.Stores.Queries.GetStoreById
+﻿using eternal_api.Application.Common.DTOs;
+using MediatR;
+
+namespace eternal_api.Application.Stores.Queries.GetStoreById
 {
-    public class GetStoreByIdQuery { public Guid Id { get; set; } }
+    public class GetStoreByIdQuery: IRequest<StoreDto> { public Guid Id { get; set; } }
 
 }

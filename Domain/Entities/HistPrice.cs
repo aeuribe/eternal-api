@@ -3,7 +3,7 @@
     public class HistPrice
     {
         // ID único del historial de precios
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         // Fecha de asignaciön de precios
         public DateTime StartDate { get; set; }
@@ -25,5 +25,6 @@
             EndDate = endDate;
         }
         public HistPrice() { }
+        
     }
 }

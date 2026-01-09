@@ -1,6 +1,8 @@
-﻿namespace eternal_api.Application.Cities.Commands.UpdateCity
+﻿using MediatR;
+
+namespace eternal_api.Application.Cities.Commands.UpdateCity
 {
-    public class UpdateCityCommand
+    public class UpdateCityCommand : IRequest<bool>
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;

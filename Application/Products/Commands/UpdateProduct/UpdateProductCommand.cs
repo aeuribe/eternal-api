@@ -1,6 +1,8 @@
-﻿namespace eternal_api.Application.Products.Commands.CreateProduct
+﻿using MediatR;
+
+namespace eternal_api.Application.Products.Commands.UpdateProduct
 {
-    public class UpdateProductCommand
+    public class UpdateProductCommand : IRequest<bool>
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;

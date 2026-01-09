@@ -1,9 +1,10 @@
 ﻿using eternal_api.Application.Common.DTOs;
 using eternal_api.Application.Common.Interfaces;
+using MediatR;
 
 namespace eternal_api.Application.Prices.Queries.GetHistPriceByProductId
 {
-    public class GetHistPriceByProductIdHandler
+    public class GetHistPriceByProductIdHandler : IRequestHandler<GetHistPriceByProductIdQuery, IEnumerable<HistPriceDto>>
     {
         private readonly IHistPriceRepository _histPriceRepository;
 
@@ -12,7 +13,7 @@ namespace eternal_api.Application.Prices.Queries.GetHistPriceByProductId
             _histPriceRepository = histPriceRepository;
         }
 
-        public async Task<List<HistPriceDto>> Handle(GetHistPriceByProductIdQuery query)
+        public async Task<IEnumerable<HistPriceDto>> Handle(GetHistPriceByProductIdQuery query, CancellationToken cancellationToken)
         {
             var prices = await _histPriceRepository.GetByProductIdAsync(query.ProductId);
             return prices.Select(p => new HistPriceDto

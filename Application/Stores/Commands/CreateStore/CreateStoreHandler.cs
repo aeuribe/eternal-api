@@ -1,28 +1,22 @@
 ﻿using eternal_api.Domain.Entities;
 using eternal_api.Application.Common.Interfaces;
+using MediatR;
 
 namespace eternal_api.Application.Stores.Commands.CreateStore
 {
-    public class CreateStoreHandler
+    public class CreateStoreHandler : IRequestHandler<CreateStoreCommand, Guid>
     {
-        private readonly IStoreRepository _repo;
+        private readonly IStoreRepository _storeRepository;
 
-        public CreateStoreHandler(IStoreRepository repo)
+        public CreateStoreHandler(IStoreRepository storeRepository)
         {
-            _repo = repo;
+            _storeRepository = storeRepository;
         }
 
-        public async Task<Guid> Handle(CreateStoreCommand command)
+        public async Task<Guid> Handle(CreateStoreCommand command, CancellationToken cancellationToken)
         {
-            var store = new Store
-            {
-                Name = command.Name,
-                Address = command.Address,
-                IsActive = command.IsActive,
-                CityId = command.CityId
-            };
-
-            await _repo.AddAsync(store);
+            var store = new Store(command.Name, command.Address, command.CityId);
+            await _storeRepository.AddAsync(store);
             return store.Id;
         }
     }
