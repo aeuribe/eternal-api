@@ -1,24 +1,27 @@
-﻿using MediatR;
-using eternal_api.Application.Common.DTOs;
-using eternal_api.Application.Common.Exceptions;
-using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Common.Exceptions;
+using eternal_api.Application.Orders.Interfaces;
+using eternal_api.Application.Orders.Queries.DTOs;
+using eternal_api.Application.Orders.Queries.GetOrdersBySalespersonId;
+using eternal_api.Domain.Entities;
+using MediatR;
 
 namespace eternal_api.Application.Orders.Queries.GetOrderBySalespersonId
 {
     public class GetOrdersBySalespersonIdHandler : IRequestHandler<GetOrdersBySalespersonIdQuery, IEnumerable<OrderDto>>
     {
-        public readonly IOrderRepository _orderRepository;
-        public readonly IUserRepository _userRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly ISalespersonValidationService _salespersonValidator;
 
-        public GetOrdersBySalespersonIdHandler(IOrderRepository orderRepository, IUserRepository userRepository)
+
+        public GetOrdersBySalespersonIdHandler(IOrderRepository orderRepository, ISalespersonValidationService salespersonValidator)
         {
             _orderRepository = orderRepository;
-            _userRepository = userRepository;
+            _salespersonValidator = salespersonValidator;
         }
 
         public async Task<IEnumerable<OrderDto>> Handle(GetOrdersBySalespersonIdQuery query, CancellationToken cancellationToken0)
         {
-            if (!await _userRepository.ExistsAsync(query.SalespersonId))
+            if (!await _salespersonValidator.ExistsAsync(query.SalespersonId))
             {
                 throw new NotFoundException("Salesperson", query.SalespersonId);
             }
@@ -32,7 +35,15 @@ namespace eternal_api.Application.Orders.Queries.GetOrderBySalespersonId
                 StoreId = o.StoreId,
                 CreatedAt = o.CreatedAt,
                 PO = o.PO,
-                Status = o.Status
+                Status = o.Status,
+                PlanogramId = o.PlanogramId,
+
+                Items = o.orderDetails?.Select(d => new OrderDetailDto
+                {
+                    OrderDetailId = d.Id,
+                    ProductId = d.ProductId,
+                    Quantity = d.Quantity
+                }).ToList() ?? new List<OrderDetailDto>()
             }).ToList();
         }
     }

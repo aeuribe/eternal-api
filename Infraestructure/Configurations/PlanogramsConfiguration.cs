@@ -18,6 +18,12 @@ namespace eternal_api.Infraestructure.Configurations
             builder.Property(p => p.Id)
                    .IsRequired();
 
+            builder.Property(p => p.Name)
+                    .IsRequired();
+
+            builder.Property(p => p.Description)
+                    .IsRequired();
+
             builder.Property(p => p.CreatedAt)
                    .IsRequired()
                    .HasDefaultValueSql("CURRENT_TIMESTAMP AT TIME ZONE 'UTC'");

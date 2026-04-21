@@ -1,4 +1,4 @@
-﻿using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Planograms.Interfaces;
 using eternal_api.Domain.Entities;
 using MediatR;
 using System.Reflection.Metadata;
@@ -16,7 +16,7 @@ namespace eternal_api.Application.Planograms.Commands.CreatePlanogram
 
         public async Task<Guid> Handle(CreatePlanogramCommand command, CancellationToken cancellationToken)
         {
-            var planogram = new Planogram();
+            var planogram = new Planogram(command.Name, command.Description);
 
             if (planogram == null) return Guid.Empty;
 

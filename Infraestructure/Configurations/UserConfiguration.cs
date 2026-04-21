@@ -12,26 +12,23 @@ namespace eternal_api.Infrastructure.Configurations
 
             builder.HasKey(u => u.Id);
 
-            builder.Property(u => u.Name)
-                .IsRequired()
-                .HasMaxLength(100);
+            builder.Property(u => u.Name).IsRequired().HasMaxLength(100);
+            builder.Property(u => u.LastName).IsRequired().HasMaxLength(100);
+            builder.Property(u => u.Rol).IsRequired().HasMaxLength(50);
+            builder.Property(u => u.Phone).HasMaxLength(20);
+            builder.Property(u => u.IsActive).HasDefaultValue(true);
+            builder.Property(e => e.IdentityUserId).HasMaxLength(450).IsRequired();
 
-            builder.Property(u => u.LastName)
-                .IsRequired()
-                .HasMaxLength(100);
+            builder.HasIndex(e => e.IdentityUserId).IsUnique();
 
-            builder.Property(u => u.Rol)
-                .IsRequired()
-                .HasMaxLength(50);
-
-            builder.Property(u => u.Phone)
-                .HasMaxLength(20);
-
-            builder.Property(u => u.CityId)
-                .IsRequired();
-
-            builder.Property(u => u.IsActive)
-                .HasDefaultValue(true);
+            // ==========================================
+            // LA NUEVA RELACIÓN OPCIONAL CON LA RUTA
+            // ==========================================
+            builder.HasOne(u => u.SalesRoute)
+                   .WithMany()
+                   .HasForeignKey(u => u.SalesRouteId)
+                   .IsRequired(false) // VITAL: Permite que el Guid sea null en la base de datos
+                   .OnDelete(DeleteBehavior.SetNull); // Si por algún milagro se borra la ruta, el usuario queda "sin ruta" en lugar de ser eliminado
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Users.Interfaces;
 using eternal_api.Domain.Entities;
 using MediatR;
 

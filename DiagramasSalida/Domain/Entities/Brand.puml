@@ -1,0 +1,10 @@
+@startuml
+class Brand {
+    + Id : Guid <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + isActive : bool <<get>> <<set>> = true
+    + Brand(name:string)
+    + Update(name:string) : void
+    + ToogleStatus() : void
+}
+@enduml

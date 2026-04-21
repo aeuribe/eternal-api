@@ -1,0 +1,17 @@
+@startuml
+class Product {
+    + Id : Guid <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + ShortName : string <<get>> <<set>>
+    + Code : string <<get>> <<set>>
+    + ImageFileName : string <<get>> <<set>>
+    + isActive : bool <<get>> <<set>> = true
+    + Sku : string <<get>> <<set>>
+    + PresentationId : Guid <<get>> <<set>>
+    + Presentation : Presentation <<get>> <<set>>
+    + Product(name:string, shortName:string, code:string, presentationId:Guid, sku:string)
+    + Update(name:string, shortName:string, code:string, presentationId:Guid, sku:string) : void
+    + UploadImage(image:string) : void
+    + Deactivate() : void
+}
+@enduml

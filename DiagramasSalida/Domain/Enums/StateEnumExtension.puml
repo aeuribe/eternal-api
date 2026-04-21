@@ -1,0 +1,6 @@
+@startuml
+class StateEnumExtensions <<static>> {
+    + {static} GetFullName(state:StateUsEnum) : string
+    + {static} GetPrefix(state:StateUsEnum) : string
+}
+@enduml

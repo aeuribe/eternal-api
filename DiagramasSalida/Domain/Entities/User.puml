@@ -1,0 +1,19 @@
+@startuml
+class User {
+    + Id : Guid <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + LastName : string <<get>> <<set>>
+    + Rol : string <<get>> <<set>>
+    + Phone : string <<get>> <<set>>
+    + IsActive : bool <<get>> <<set>> = true
+    + IdentityUserId : string <<get>> <<set>>
+    + SalesRouteId : Guid? <<get>> <<set>>
+    + SalesRoute : SalesRoute? <<get>> <<set>>
+    - User()
+    + User(name:string, lastName:string, rol:string, phone:string, identityUserId:string)
+    + Update(name:string, lastName:string, rol:string, phone:string) : void
+    + Desactivate() : void
+    + AssignRoute(routeId:Guid) : void
+    + RemoveRoute() : void
+}
+@enduml

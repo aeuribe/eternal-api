@@ -9,7 +9,7 @@
         public int Quantity { get; set; }
 
         // Subtotal facturado por producto
-        public float Subtotal { get; set; }
+        public decimal Subtotal { get; set; }
         
         // Clave foránea de Invoice
         public Guid InvoiceId { get; set; }
@@ -18,16 +18,16 @@
         public Guid ProductId { get; set; }
 
 
-        public InvoiceDetail(Guid invoiceId, Guid productId, int quantity, float subtotal)
+        public InvoiceDetail(Guid id, Guid invoiceId, Guid productId, int quantity, decimal subtotal)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             InvoiceId = invoiceId;
             ProductId = productId;
             Quantity = quantity;
             Subtotal = subtotal;
         }
 
-        public void Update(Guid invoiceId, Guid productId, int quantity, float subtotal)
+        public void Update(Guid invoiceId, Guid productId, int quantity, decimal subtotal)
         {
             InvoiceId = invoiceId;
             ProductId = productId;

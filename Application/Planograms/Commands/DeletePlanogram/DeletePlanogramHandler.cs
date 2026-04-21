@@ -1,5 +1,5 @@
-﻿using eternal_api.Application.Common.Interfaces;
-using eternal_api.Application.Planograms.Commands.UpdatePlanogram;
+﻿using eternal_api.Application.Planograms.Commands.UpdatePlanogram;
+using eternal_api.Application.Planograms.Interfaces;
 using MediatR;
 
 namespace eternal_api.Application.Planograms.Commands.DeletePlanogram

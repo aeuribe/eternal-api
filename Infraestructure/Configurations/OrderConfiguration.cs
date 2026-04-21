@@ -1,4 +1,5 @@
 ﻿using eternal_api.Domain.Entities;
+using eternal_api.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -27,7 +28,7 @@ namespace eternal_api.Infraestructure.Configurations
             builder.Property(e => e.Status)
                 .HasColumnName("STATUS")
                 .IsRequired()
-                .HasMaxLength(20);
+                .HasDefaultValue(OrderStatus.Created);
 
             builder.Property(e => e.SalespersonId)
                 .HasColumnName("SALESPERSON_ID")
@@ -35,6 +36,15 @@ namespace eternal_api.Infraestructure.Configurations
 
             builder.Property(e => e.StoreId)
                 .HasColumnName("STORE_ID")
+                .IsRequired();
+
+
+            builder.Property(e => e.PlanogramId)
+                .HasColumnName("PLANOGRAM_ID")
+                .IsRequired();
+
+            builder.Property(e => e.SalesRouteId)
+                .HasColumnName("SALES_ROUTE_ID")
                 .IsRequired();
 
             builder.HasOne(e => e.Salesperson)
@@ -46,6 +56,12 @@ namespace eternal_api.Infraestructure.Configurations
                 .WithMany()
                 .HasForeignKey(e => e.StoreId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(e => e.SalesRoute)
+                .WithMany()
+                .HasForeignKey(e => e.SalesRouteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

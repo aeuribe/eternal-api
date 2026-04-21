@@ -2,49 +2,44 @@
 {
     public class Invoice
     {
-        // ID único de invoice
         public Guid Id { get; set; }
-
-        // Fecha de creación
         public DateTime CreatedAt { get; set; }
-
-        // Monto total
         public decimal Total { get; set; }
-
-        // Clave foránea de la orden asociada
         public Guid OrderId { get; set; }
-
-        // Propiedad de navegación
         public Order Order { get; set; }
+        public string? POD { get; private set; }
+        public string InvoiceNumber { get; private set; }
 
-        // Lista de detalles de la factura
-        public ICollection<InvoiceDetail> invoiceDetails { get; set; } = new List<InvoiceDetail>();
+        // 1. CORRECCIÓN: PascalCase y private set para proteger la colección
+        public ICollection<InvoiceDetail> invoiceDetails { get; private set; } = new List<InvoiceDetail>();
 
-        // Propiedad de navegación
-        public POD? POD { get; set; }
+        protected Invoice() { }
 
-        //Se usa solo para EF Core
-        public Guid? PodId { get; set; }
-
-        public Invoice(Guid orderId, decimal total)
+        public Invoice(Guid id, Guid orderId, decimal total, string? pod, string invoiceNumber)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             CreatedAt = DateTime.UtcNow;
             OrderId = orderId;
             Total = total;
+            POD = pod ?? string.Empty;
+            InvoiceNumber = invoiceNumber;
         }
 
-        public void Update(decimal total, Guid orderId) 
+        public void AssignPOD(string? pod)
         {
-            Total = total;
-            OrderId = orderId;
+            POD = pod;
         }
 
-        public void AssignPOD(string imageUrl)
+        public void DeletePOD()
         {
-            if (POD != null)
-                throw new InvalidOperationException($"Invoice {this.Id} already has a POD assigned");
-            POD = new POD(imageUrl);
+            POD = string.Empty;
+        }
+
+        // 2. NUEVO MÉTODO DDD: La factura controla cómo se agregan sus detalles
+        public void AddDetail(Guid detailId, Guid productId, int quantity, decimal subtotal)
+        {
+            // Asumo que tu constructor de InvoiceDetail recibe (Id, InvoiceId, ProductId, Quantity, Subtotal)
+            invoiceDetails.Add(new InvoiceDetail(detailId, this.Id, productId, quantity, subtotal));
         }
     }
 }

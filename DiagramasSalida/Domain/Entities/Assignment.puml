@@ -1,0 +1,12 @@
+@startuml
+class Assignment {
+    + Id : Guid <<get>> <<set>>
+    + AssignedAt : DateTime <<get>> <<set>>
+    + SalesRouteId : Guid <<get>> <<set>>
+    + SalesRoute : SalesRoute <<get>> <<set>>
+    + StoreId : Guid <<get>> <<set>>
+    + Store : Store <<get>> <<set>>
+    + Assignment(salesRouteId:Guid, storeId:Guid)
+    + Update(salesRouteId:Guid, storeId:Guid) : void
+}
+@enduml

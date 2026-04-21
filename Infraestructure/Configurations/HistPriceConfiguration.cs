@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using eternal_api.Domain.Entities;
 
-namespace eternal_api.Infrastructure.Configurations
+namespace eternal_api.Infraestructure.Configurations
 {
     public class HistPriceConfiguration : IEntityTypeConfiguration<HistPrice>
     {
@@ -12,7 +12,7 @@ namespace eternal_api.Infrastructure.Configurations
 
             builder.HasKey(p => p.Id);
 
-            builder.Property(p => p.ProductId)
+            builder.Property(p => p.PresentationId)
                 .IsRequired();
 
             builder.Property(p => p.Price)
@@ -24,6 +24,11 @@ namespace eternal_api.Infrastructure.Configurations
 
             builder.Property(p => p.EndDate)
                 .IsRequired(false);
+
+            builder.HasOne<Presentation>()
+                .WithMany()
+                .HasForeignKey(p => p.PresentationId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

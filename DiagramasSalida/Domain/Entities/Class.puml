@@ -1,0 +1,10 @@
+@startuml
+class Class {
+    + Id : Guid <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + IsActive : bool <<get>> <<set>>
+    + Class()
+    + Class(name:string)
+    + ToggleStatus() : void
+}
+@enduml

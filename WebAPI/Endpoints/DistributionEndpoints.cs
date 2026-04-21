@@ -1,6 +1,6 @@
 ﻿using eternal_api.Application.Distributions.Commands.AddDistribution;
 using eternal_api.Application.Distributions.Commands.UpdateDistribution;
-using eternal_api.Application.Distributions.Commands.DeleteDistribution;
+using eternal_api.Application.Distributions.Commands.DesactivateDistribution;
 //using eternal_api.Application.Distributions.Queries.GetDistributionById;
 using eternal_api.Application.Distributions.Queries.GetAllDistributionsByPlanogramId;
 using MediatR;
@@ -16,7 +16,7 @@ namespace eternal_api.WebAPI.Endpoints
             app.MapPost("/distributions", async (AddDistributionCommand command, IMediator mediator) =>
             {
                 var result = await mediator.Send(command);
-                return Results.Created($"/distributions/{result}", result);
+                return Results.Created($"/{result}", result);
             });
 
             // Actualizar una distribución existente
@@ -47,10 +47,10 @@ namespace eternal_api.WebAPI.Endpoints
                     : Results.Ok(result);
             });
 
-            // Eliminar una distribución
-            app.MapDelete("/distributions/{id:guid}", async (Guid id, IMediator mediator) =>
+            // Desactivar una distribución
+            app.MapPut("/distributions/desactivate{id:guid}", async (Guid id, IMediator mediator) =>
             {
-                var command = new DeleteDistributionCommand { Id = id };
+                var command = new DesactivateDistributionCommand { Id = id };
                 var result = await mediator.Send(command);
                 return result ? Results.NoContent() : Results.NotFound();
             });

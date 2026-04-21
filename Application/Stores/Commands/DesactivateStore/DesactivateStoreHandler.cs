@@ -1,5 +1,4 @@
-﻿
-using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Stores.Interfaces;
 using MediatR;
 
 namespace eternal_api.Application.Stores.Commands.DesactivateStore

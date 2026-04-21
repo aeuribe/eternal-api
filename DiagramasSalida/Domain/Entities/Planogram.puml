@@ -1,0 +1,12 @@
+@startuml
+class Planogram {
+    + Id : Guid <<get>> <<set>>
+    + CreatedAt : DateTime <<get>> <<set>>
+    + isActive : bool <<get>> <<set>> = true
+    + Name : string <<get>> <<set>>
+    + Description : string <<get>> <<set>>
+    + Planogram(name:string, description:string)
+    + Update(name:string, description:string) : void
+    + Desactivate() : void
+}
+@enduml

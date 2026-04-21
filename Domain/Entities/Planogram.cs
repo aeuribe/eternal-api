@@ -11,21 +11,25 @@
         // Status del planograma
         public bool isActive { get; set; } = true;
 
-        public Planogram()
+        public string Name { get; set; }
+        public string Description { get; set; }
+
+        public Planogram(string name, string description)
         {
+            Name = name;
+            Description = description;
             CreatedAt = DateTime.UtcNow;
         }
 
-        public void SwitchStatus()
+        public void Update(string name, string description) 
         {
-            if (isActive == true)
-            {
-                isActive = false;
-            }
-            else
-            {
-                isActive = true;
-            }
+            Name = name;
+            Description = description;
+        }
+
+        public void Desactivate()
+        {
+            isActive = false;
         }
     }
 }

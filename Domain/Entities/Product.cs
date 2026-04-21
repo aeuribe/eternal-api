@@ -1,42 +1,47 @@
-﻿namespace eternal_api.Domain.Entities
+﻿
+namespace eternal_api.Domain.Entities
 {
     public class Product
     {
-        // ID único del producto
+
         public Guid Id { get; set; } = Guid.NewGuid();
-
-        // Nombre del producto
-        public string Name { get; set; } = string.Empty;
-
-        // Categoria del producto
-        public string Category { get; set; } = string.Empty;
-
-        // SKU del producto
-        public string SKU { get; set; } = string.Empty;
-
-        // Status de disponibilidad del producto
+        public string Name { get; set; }
+        public string ShortName { get; set; }
+        public string Code { get; set; }
+        public string ImageFileName { get; set; } = string.Empty;
         public bool isActive { get; set; } = true;
+        public string Sku { get; set; } 
 
-        // Constructor para creación
-        public Product(string name, string category, string SKU)
+        public Guid PresentationId { get; set; }
+        public Presentation Presentation { get; set; }
+
+
+        // Constructor para creación actualizado
+        public Product(string name, string shortName, string code, Guid presentationId, string sku)
         {
             Id = Guid.NewGuid();
             Name = name;
-            Category = category;
-            this.SKU = SKU;
+            ShortName = shortName;
+            Code = code;
+            PresentationId = presentationId;
+            Sku = sku;
         }
 
-        public void Update(string name, string category, string sku)
+        // Método Update actualizado
+        public void Update(string name, string shortName, string code, Guid presentationId, string sku)
         {
             Name = name;
-            Category = category;
-            SKU = sku;
+            ShortName = shortName;
+            Code = code;
+            PresentationId = presentationId;
+            Sku = sku;
         }
 
-        // Método de dominio (ejemplo de lógica interna)
-        public void Deactivate() => isActive = false;
+        public void UploadImage(string image)
+        {
+            ImageFileName = image;
+        }
 
-        public void Activate() => isActive = true;
-
+        public void Deactivate() => isActive = !isActive;
     }
 }

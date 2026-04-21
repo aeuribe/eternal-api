@@ -1,0 +1,11 @@
+@startuml
+class HistPrice {
+    + Id : Guid <<get>> <<set>>
+    + StartDate : DateTime <<get>> <<set>>
+    + EndDate : DateTime? <<get>> <<set>>
+    + Price : decimal <<get>> <<set>> = 0
+    + PresentationId : Guid <<get>> <<set>>
+    + HistPrice(presentationId:Guid, value:decimal, startDate:DateTime, endDate:DateTime?)
+    + HistPrice()
+}
+@enduml

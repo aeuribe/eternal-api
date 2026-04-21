@@ -1,0 +1,16 @@
+@startuml
+class Family {
+    + Id : Guid <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + FamilyCode : string <<get>> <<set>>
+    + isActive : bool <<get>> <<set>> = true
+    + BrandId : Guid <<get>> <<set>>
+    + Brand : Brand <<get>> <<set>>
+    + ClassId : Guid <<get>> <<set>>
+    + Class : Class <<get>> <<set>>
+    + Family()
+    + Family(name:string, familyCode:string, brandId:Guid, classId:Guid)
+    + Update(name:string, familyCode:string, brandId:Guid, classId:Guid) : void
+    + ToogleStatus() : void
+}
+@enduml

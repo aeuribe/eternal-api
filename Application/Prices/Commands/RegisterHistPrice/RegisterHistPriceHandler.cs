@@ -1,4 +1,4 @@
-﻿using eternal_api.Application.Common.Interfaces;
+using eternal_api.Application.Prices.Interfaces;
 using eternal_api.Domain.Entities;
 using MediatR;
 
@@ -17,7 +17,7 @@ namespace eternal_api.Application.Prices.Commands.RegisterHistPrice
         {
             var price = new HistPrice
             {
-                ProductId = command.ProductId,
+                PresentationId = command.PresentationId,
                 Price = command.Price,
                 StartDate = command.StartDate,
                 EndDate = command.EndDate

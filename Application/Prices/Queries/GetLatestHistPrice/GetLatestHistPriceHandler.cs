@@ -1,5 +1,5 @@
-﻿using eternal_api.Application.Common.DTOs;
-using eternal_api.Application.Common.Interfaces;
+using eternal_api.Application.Prices.DTOs;
+using eternal_api.Application.Prices.Interfaces;
 using eternal_api.Application.Prices.Queries;
 using MediatR;
 
@@ -16,7 +16,7 @@ namespace eternal_api.Application.HistPrices.Queries.GetLatestHistPrice
 
         public async Task<HistPriceDto?> Handle(GetLatestHistPriceQuery query, CancellationToken cancellationToken)
         {
-            var price = await _histPriceRepository.GetLatestAsync(query.ProductId);
+            var price = await _histPriceRepository.GetLatestAsync(query.PresentationId);
             return price is null ? null : new HistPriceDto
             {
                 Id = price.Id,

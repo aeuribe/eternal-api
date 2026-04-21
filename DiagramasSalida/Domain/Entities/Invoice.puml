@@ -1,0 +1,17 @@
+@startuml
+class Invoice {
+    + Id : Guid <<get>> <<set>>
+    + CreatedAt : DateTime <<get>> <<set>>
+    + Total : decimal <<get>> <<set>>
+    + OrderId : Guid <<get>> <<set>>
+    + Order : Order <<get>> <<set>>
+    + POD : string? <<get>>
+    + InvoiceNumber : string <<get>>
+    + invoiceDetails : ICollection<InvoiceDetail> <<get>>
+    # Invoice()
+    + Invoice(id:Guid, orderId:Guid, total:decimal, pod:string?, invoiceNumber:string)
+    + AssignPOD(pod:string?) : void
+    + DeletePOD() : void
+    + AddDetail(detailId:Guid, productId:Guid, quantity:int, subtotal:decimal) : void
+}
+@enduml

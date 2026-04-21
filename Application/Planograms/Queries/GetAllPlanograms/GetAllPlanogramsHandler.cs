@@ -1,5 +1,5 @@
-﻿using eternal_api.Application.Common.DTOs;
-using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Planograms.Interfaces;
+using eternal_api.Application.Planograms.Queries.DTOs;
 using eternal_api.Application.Planograms.Queries.GetPlanogramById;
 using eternal_api.Domain.Entities;
 using eternal_api.Infraestructure.Repositories;
@@ -23,6 +23,8 @@ namespace eternal_api.Application.Planograms.Queries.GetAllPlanograms
             return planograms.Select(o => new PlanogramDto
             {
                 Id = o.Id,
+                Name = o.Name,
+                Description = o.Description,
                 CreatedAt = o.CreatedAt,
                 isActive = o.isActive
             }).ToList();

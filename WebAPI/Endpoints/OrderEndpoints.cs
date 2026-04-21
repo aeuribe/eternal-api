@@ -1,12 +1,13 @@
-﻿using eternal_api.Application.Common.DTOs;
+﻿
 using eternal_api.Application.Orders.Commands.CreateOrder;
+using eternal_api.Application.Orders.Commands.DeleteOrder;
 using eternal_api.Application.Orders.Commands.UpdateOrder;
 using eternal_api.Application.Orders.Commands.UpdateStatus;
 using eternal_api.Application.Orders.Queries.GetAllOrders;
 using eternal_api.Application.Orders.Queries.GetOrderById;
 using eternal_api.Application.Orders.Queries.GetOrderBySalespersonId;
+using eternal_api.Application.Orders.Queries.GetOrderDiscrepancies;
 using eternal_api.Application.Orders.Queries.GetOrdersByStoreId;
-using eternal_api.Application.Orders.Commands.DeleteOrder;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,16 +20,30 @@ namespace eternal_api.WebAPI.Endpoints
             app.MapPost("/orders", async (CreateOrderCommand command, IMediator mediator) => 
             {
                 var result = await mediator.Send(command);
-                return Results.Created($"/orders/{result}", result);
+                return Results.Created($"/{result}", result);
             });
 
-            app.MapPut("/order/{id:guid}", async (Guid id, UpdateOrderCommand command, IMediator mediator) =>
+            app.MapPut("/orders/{id:guid}", async (Guid id, [FromBody] UpdateOrderCommand command, IMediator mediator) =>
             {
-                command.OrderId = id;
-                var result = await mediator.Send(command);
-                return result ? Results.NoContent() : Results.NotFound();
+                // Aseguramos que el ID de la ruta sea el que se procesa en el comando
+                command.Id = id;
+
+                try
+                {
+                    var result = await mediator.Send(command);
+                    return result ? Results.NoContent() : Results.NotFound();
+                }
+                catch (InvalidOperationException ex)
+                {
+                    // Captura la excepción de estado (ej: "Solo se pueden modificar pedidos en estado Creado")
+                    return Results.BadRequest(new { error = ex.Message });
+                }
+                catch (Exception ex)
+                {
+                    // Captura cualquier otro error (ej: "La orden no existe")
+                    return Results.BadRequest(new { error = ex.Message });
+                }
             });
-           
 
             app.MapPut("/order/{id}/status", async (Guid id, UpdateStatusCommand command, IMediator mediator) =>
             {
@@ -40,7 +55,7 @@ namespace eternal_api.WebAPI.Endpoints
             app.MapGet("/orders", async ([FromServices] IMediator mediator) => 
             {
                 var query = new GetAllOrdersQuery();
-                var result = mediator.Send(query);
+                var result = await mediator.Send(query);
                 return result is null
                     ? Results.NotFound()
                     : Results.Ok(result);
@@ -70,6 +85,16 @@ namespace eternal_api.WebAPI.Endpoints
             {
                 var query = new GetOrdersByStoreIdQuery();
                 query.StoreId = id;
+                var result = await mediator.Send(query);
+                return result is null
+                    ? Results.NotFound()
+                    : Results.Ok(result);
+            });
+
+            app.MapGet("/orders/dicrepancies/{id:guid}", async (Guid id, IMediator mediator) =>
+            {
+                var query = new GetOrderDiscrepanciesQuery();
+                query.Id = id;
                 var result = await mediator.Send(query);
                 return result is null
                     ? Results.NotFound()

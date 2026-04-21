@@ -2,39 +2,54 @@
 {
     public class Store
     {
-        // ID único de la tienda
         public Guid Id { get; set; } = Guid.NewGuid();
-
-        // Nombre de la tienda
-        public string Name { get; set; }
-
-        // Dirección de la tienda
-        public string Address { get; set; }
-
-        // Validación de estatus de la tienda
+        public string StoreNumber { get; set; }
+        public string ZoneNumber { get; set; }
+        public string ZipCode { get; set; }
+        public string? Name { get; set; }
+        public string Street { get; set; }
         public bool IsActive { get; set; }
+        public bool HasPlanogram { get; set; }
 
         // Relación con la entidad City
         public Guid CityId { get; set; }
+        public City City { get; set; }
 
-        public Store(string name, string address, Guid cityId)
+        public Guid DistrictId { get; set; }
+        public District District { get; set; }
+
+        public Store() { }
+
+        // Constructor para la creación inicial (IsActive = true por defecto)
+        public Store(string storeNumber, string zoneNumber, string zipCode, string? name, string street, bool hasPlanogram, Guid cityId, Guid districtId)
         {
+            StoreNumber = storeNumber;
+            ZoneNumber = zoneNumber;
+            ZipCode = zipCode;
             Name = name;
-            Address = address;
-            CityId = cityId;
+            Street = street;
             IsActive = true;
+            HasPlanogram = hasPlanogram;
+            CityId = cityId;
+            DistrictId = districtId;
         }
 
-        public void Update(string name, string address, Guid cityId)
+        // Método Update para la modificación de datos
+        public void Update(string storeNumber, string zoneNumber, string zipCode, string? name, string street, bool hasPlanogram, Guid cityId, Guid districtId)
         {
+            StoreNumber = storeNumber;
+            ZoneNumber = zoneNumber;
+            ZipCode = zipCode;
             Name = name;
-            Address = address;
+            Street = street;
+            HasPlanogram = hasPlanogram;
             CityId = cityId;
+            DistrictId = districtId;
         }
 
         public void Desactivate()
         {
-            IsActive = false;
+            IsActive = !IsActive;
         }
     }
 }

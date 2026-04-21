@@ -1,6 +1,8 @@
-﻿using MediatR;
-using eternal_api.Application.Common.DTOs;
-using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Images.Services;
+using eternal_api.Application.Invoices.Interfaces;
+using eternal_api.Application.Invoices.Queries.DTOs;
+using eternal_api.Domain.Entities;
+using MediatR;
 
 namespace eternal_api.Application.Bills.Queries.GetBillById
 {
@@ -8,13 +10,17 @@ namespace eternal_api.Application.Bills.Queries.GetBillById
     public class GetInoviceByIdHandler : IRequestHandler <GetInvoiceByIdQuery, InvoiceDto>
     {
         private readonly IInvoiceRepository _invoiceRepository;
+        private readonly IStorageService _storageService;
+        private readonly IPOProvider _POProvider;
 
         // Inyección de dependencias: el handler no accede directamente a la base de datos,
         // sino que depende de un contrato (IInvoiceRepository).
         // Así mantenemos el principio de inversión de dependencias de Clean Architecture.
-        public GetInoviceByIdHandler(IInvoiceRepository invoiceRepository)
+        public GetInoviceByIdHandler(IInvoiceRepository invoiceRepository, IStorageService storageService, IPOProvider POProvider)
         {
             _invoiceRepository = invoiceRepository;
+            _storageService = storageService;
+            _POProvider = POProvider;
         }
 
         // Método que procesa la Query.
@@ -38,12 +44,30 @@ namespace eternal_api.Application.Bills.Queries.GetBillById
                 - Protege la capa de dominio de modificaciones externas.
              */
 
+            // 2. Validamos si ImageFileName tiene contenido antes de buscar la URL
+            string? imageUrl = null;
+            if (!string.IsNullOrWhiteSpace(invoice.POD))
+            {
+                imageUrl = await _storageService.GetFileUrlAsync(invoice.POD);
+            }
+
             return new InvoiceDto
             {
                 Id = invoice.Id,
                 Total = invoice.Total,
-                CreatedAt = invoice.CreatedAt
-            };
+                CreatedAt = invoice.CreatedAt,
+                OrderId = invoice.OrderId,
+                PodImageUrl = imageUrl,
+                InvoiceNumber = invoice.InvoiceNumber,
+                Items = invoice.invoiceDetails?.Select(d => new InvoiceDto.InvoiceDetailDto // Referencia a la clase anidada
+                {
+                    InvoiceDetailId = d.Id,
+                    InvoiceId = d.InvoiceId,
+                    ProductId = d.ProductId,
+                    Quantity = d.Quantity,
+                    Subtotal = d.Subtotal // Cast si en la DB aún es float, pero mejor cámbialo a decimal
+                }).ToList() ?? new List<InvoiceDto.InvoiceDetailDto>()
+            }; 
         }
     }
 }

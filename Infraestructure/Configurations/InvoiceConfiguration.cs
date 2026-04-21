@@ -19,9 +19,7 @@ namespace eternal_api.Infraestructure.Configurations
             builder.Property(e => e.Total)
                 .HasDefaultValue(0);
 
-            builder.HasOne(e => e.POD)
-                .WithOne()
-                .HasForeignKey<Invoice>(e => e.PodId);
+            builder.Property(e => e.POD);
 
             builder.HasOne(e => e.Order)
                 .WithOne()

@@ -1,0 +1,11 @@
+@startuml
+class District {
+    + Id : Guid <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + RegionId : Guid <<get>> <<set>>
+    + Region : Region <<get>> <<set>>
+    + District()
+    + District(regionId:Guid, name:string)
+    + Update(regionId:Guid, name:string) : void
+}
+@enduml

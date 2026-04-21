@@ -1,0 +1,25 @@
+@startuml
+!include .\\.\Domain\Entities\Area.puml
+!include .\\.\Domain\Entities\Assignment.puml
+!include .\\.\Domain\Entities\Brand.puml
+!include .\\.\Domain\Entities\City.puml
+!include .\\.\Domain\Entities\Class.puml
+!include .\\.\Domain\Entities\Distribution.puml
+!include .\\.\Domain\Entities\District.puml
+!include .\\.\Domain\Entities\Family.puml
+!include .\\.\Domain\Entities\HistPrice.puml
+!include .\\.\Domain\Entities\Invoice.puml
+!include .\\.\Domain\Entities\InvoiceDetail.puml
+!include .\\.\Domain\Entities\Order.puml
+!include .\\.\Domain\Entities\OrderDetail.puml
+!include .\\.\Domain\Entities\Planogram.puml
+!include .\\.\Domain\Entities\Presentation.puml
+!include .\\.\Domain\Entities\Product.puml
+!include .\\.\Domain\Entities\Region.puml
+!include .\\.\Domain\Entities\SalesRoute.puml
+!include .\\.\Domain\Entities\Store.puml
+!include .\\.\Domain\Entities\User.puml
+!include .\\.\Domain\Enums\OrderStatus.puml
+!include .\\.\Domain\Enums\StateEnumExtension.puml
+!include .\\.\Domain\Enums\StateUsEnum.puml
+@enduml

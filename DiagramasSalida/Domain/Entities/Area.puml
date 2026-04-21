@@ -1,0 +1,9 @@
+@startuml
+class Area {
+    + Id : Guid <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + Area()
+    + Area(name:string)
+    + Update(name:string) : void
+}
+@enduml

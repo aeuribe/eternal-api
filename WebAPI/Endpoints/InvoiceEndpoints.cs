@@ -1,9 +1,7 @@
-﻿using eternal_api.Application.Bills.Commands.AssignPod;
-using eternal_api.Application.Bills.Commands.CreateBill;
-using eternal_api.Application.Bills.Commands.UpdateBill;
+﻿using eternal_api.Application.Bills.Commands.CreateBill;
 using eternal_api.Application.Bills.Queries.GetAllBills;
 using eternal_api.Application.Bills.Queries.GetBillById;
-using eternal_api.Application.invoices.Commands.Createinvoice;
+using eternal_api.Application.Invoices.Commands.AssignPOD;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -18,23 +16,7 @@ namespace eternal_api.WebAPI.Endpoints
             app.MapPost("/invoices", async (CreateInvoiceCommand command, [FromServices] IMediator mediator) =>
             {
                 var result = await mediator.Send(command);
-                return Results.Created($"/invoices/{result}", result);
-            });
-
-            // Update Invoice
-            app.MapPut("/invoices/{id:guid}", async(Guid id, UpdateInvoiceCommand command, [FromServices] IMediator mediator) =>
-            {
-                command.Id = id;
-                var result = await mediator.Send(command);
-                return result ? Results.NoContent() : Results.NotFound();
-            });
-
-            // Create and Assing POD
-            app.MapPost("/invoices/{id:guid}/pod", async (Guid id, AssignPodCommand command, [FromServices] IMediator mediator) =>
-            {
-                command.Id = id;
-                var result = await mediator.Send(command);
-                return Results.Created($"/invoice/{result}", result);
+                return Results.Created($"/{result}", result);
             });
 
             //// Obtener Invoice por Id
@@ -42,7 +24,7 @@ namespace eternal_api.WebAPI.Endpoints
             {
                 var query = new GetInvoiceByIdQuery();
                 query.Id = id;
-                var result = mediator.Send(query);
+                var result = await mediator.Send(query);
 
                 return result is null
                     ? Results.NotFound()
@@ -58,6 +40,21 @@ namespace eternal_api.WebAPI.Endpoints
                 return result is null
                     ? Results.NotFound()
                     : Results.Ok(result);
+            });
+
+            app.MapPatch("/invoices/{id:guid}/pod", async ([FromRoute] Guid id, [FromBody] string podUrl, [FromServices] IMediator mediator) =>
+            {
+                // Instanciamos el comando mapeando el ID de la URL y el string del Body
+                var command = new AssignPODCommand
+                {
+                    Id = id,
+                    POD = podUrl
+                };
+
+                var result = await mediator.Send(command);
+
+                // Si MediatR devuelve true, retornamos un 204 No Content (Estándar para actualizaciones exitosas sin cuerpo de respuesta)
+                return result ? Results.NoContent() : Results.BadRequest("No se pudo actualizar el POD.");
             });
 
             return app;

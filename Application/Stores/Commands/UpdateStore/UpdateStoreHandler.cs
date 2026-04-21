@@ -1,5 +1,4 @@
-﻿
-using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Stores.Interfaces;
 using MediatR;
 
 namespace eternal_api.Application.Stores.Commands.UpdateStore
@@ -16,13 +15,23 @@ namespace eternal_api.Application.Stores.Commands.UpdateStore
         public async Task<bool> Handle(UpdateStoreCommand command, CancellationToken cancellationToken)
         {
             var store = await _storeRepository.GetByIdAsync(command.Id);
+
             if (store is null) return false;
 
-            store.Update(command.Name, command.Address, command.CityId);
+            // Llamamos al método Update de la entidad con los nuevos parámetros
+            store.Update(
+                command.StoreNumber,
+                command.ZoneNumber,
+                command.ZipCode,
+                command.Name,
+                command.Street,
+                command.HasPlanogram,
+                command.CityId,
+                command.DistrictId
+            );
 
             await _storeRepository.UpdateAsync(store);
             return true;
         }
     }
-
 }

@@ -1,33 +1,52 @@
-﻿using MediatR;
-using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Orders.Interfaces;
+using eternal_api.Domain.Enums;
+using MediatR;
 
 namespace eternal_api.Application.Orders.Commands.UpdateStatus
 {
     public class UpdateStatusHandler : IRequestHandler<UpdateStatusCommand, bool>
     {
-        public readonly IOrderRepository _orderRepository;
+        public readonly IOrderUnitOfWork _orderUnitOfWork;
 
-        public UpdateStatusHandler(IOrderRepository orderRepository)
+        public UpdateStatusHandler(IOrderUnitOfWork orderUnitOfWork)
         {
-            _orderRepository = orderRepository;
+            _orderUnitOfWork = orderUnitOfWork;
         }
 
         public async Task<bool> Handle(UpdateStatusCommand command, CancellationToken cancellationToken)
         {
-            var order = await _orderRepository.GetByIdAsync(command.OrderId);
+            var order = await _orderUnitOfWork.OrderRepository.GetByIdAsync(command.OrderId);
+
             if (order == null)
             {
-                // Podrías lanzar una excepción o registrar el evento
                 throw new InvalidOperationException($"Order with ID {command.OrderId} not found.");
-                
             }
 
-            if (command.IsInvoiced)
+            // Máquina de estados: Ejecutamos el método según el Enum solicitado
+            switch (command.NewStatus)
             {
-                order.UpdateStatusToInvoiced();
+                case OrderStatus.Invoiced:
+                    order.MarkAsInvoiced();
+                    break;
+                case OrderStatus.Canceled:
+                    order.MarkAsCanceled();
+                    break;
+                case OrderStatus.Created:
+                    // Por lo general, no puedes devolver una orden a "Creada" si ya avanzó, 
+                    // así que puedes ignorarlo o lanzar una excepción.
+                    break;
+                default:
+                    throw new Exception($"El estado {(int)command.NewStatus} no es un estado válido para la orden.");
             }
+
+            // Notificamos al tracker de EF Core que esta entidad cambió
+            await _orderUnitOfWork.OrderRepository.UpdateStatus(order);
+
+            // Guardamos el cambio en PostgreSQL
+            await _orderUnitOfWork.CompleteAsync(cancellationToken);
 
             return true;
         }
     }
 }
+

@@ -1,11 +1,12 @@
-﻿using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Cities.Interfaces;
+using eternal_api.Application.Identity.Command.Register;
 using eternal_api.Domain.Entities;
 using eternal_api.Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace eternal_api.Infraestructure.Repositories
 {
-    public class CityRepository : ICityRepository
+    public class CityRepository : ICityRepository, ICityProvider
     {
         private readonly AppDbContext _context;
 

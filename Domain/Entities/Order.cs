@@ -1,54 +1,107 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore.Update.Internal;
-using System.Data;
+﻿using eternal_api.Domain.Enums;
 
 namespace eternal_api.Domain.Entities
 {
     public class Order
     {
-        // ID único de Order
         public Guid Id { get; set; }
-
-        // Fecha de creación de la orden
         public DateTime CreatedAt { get; set; }
+        public string? PO { get; private set; } // private set para protegerlo
 
-        // Número de PO
-        public string? PO { get; set; }
+        public OrderStatus Status { get; private set; }
 
-        // Status de la orden que son "pending" y "invoiced"
-        public string Status { get; set; }
-
-        // Uso exclusivo de EF Core
         public Guid SalespersonId { get; set; }
         public User Salesperson { get; set; }
 
-        // Uso exclusivo de EF Core
         public Guid StoreId { get; set; }
         public Store Store { get; set; }
 
-        public ICollection<OrderDetail> orderDetails { set; get; }
+        public Guid PlanogramId { get; set; }
+        public Planogram? Planogram { get; set; }
+
+        public Guid SalesRouteId { get; set; }
+        public SalesRoute SalesRoute { get; set; }
+
+        // 1. CORRECCIÓN CRÍTICA: Inicializamos la lista y usamos PascalCase
+        public ICollection<OrderDetail> orderDetails { get; private set; } = new List<OrderDetail>();
 
         public Order() { }
-        public Order(Guid salespersonId, Guid storeId, string po)
+
+        public Order(Guid id, Guid salespersonId, Guid storeId, Guid planogramId, string? po, Guid salesRouteId)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             CreatedAt = DateTime.UtcNow;
-            Status = "pending";
+            Status = OrderStatus.Created;
+            SalespersonId = salespersonId;
+            SalesRouteId = salesRouteId;
+            StoreId = storeId;
+            PlanogramId = planogramId;
             PO = po;
-            SalespersonId = salespersonId;
+            
+        }
+
+        public void UpdateStore(Guid storeId)
+        {
             StoreId = storeId;
         }
 
-        public void Update(Guid salespersonId, Guid storeId, string PO)
+        // 2. NUEVO MÉTODO: Para que el Handler pueda actualizar el PO
+        public void UpdatePo(string? po)
         {
-            SalespersonId = salespersonId;
-            StoreId = storeId;
-            this.PO = PO;
-        }
-        public void UpdateStatusToInvoiced() 
-        {
-            Status = "invoiced";
+            PO = po;
         }
 
+        public void MarkAsInvoiced()
+        {
+            if (Status == OrderStatus.Canceled)
+                throw new Exception("No se puede facturar una orden que ha sido cancelada.");
+
+            Status = OrderStatus.Invoiced;
+        }
+
+        public void MarkAsCanceled()
+        {
+            if (Status == OrderStatus.Invoiced)
+                throw new Exception("No se puede cancelar una orden que ya fue facturada. Debes emitir una nota de crédito.");
+
+            Status = OrderStatus.Canceled;
+        }
+
+        public void UpdateDetails(IEnumerable<(Guid Id, Guid ProductId, int Quantity)> incomingItems)
+        {
+            // Extraemos los IDs de los detalles que vienen en el request
+            var incomingDetailIds = incomingItems.Select(i => i.Id).ToList();
+
+            // 1. ELIMINAR: Borramos los detalles cuyo ID ya no viene en la lista del frontend
+            var itemsToRemove = orderDetails.Where(od => !incomingDetailIds.Contains(od.Id)).ToList();
+            foreach (var item in itemsToRemove)
+            {
+                orderDetails.Remove(item);
+            }
+
+            // 2. ACTUALIZAR o AGREGAR
+            foreach (var incoming in incomingItems)
+            {
+                // Buscamos por el ID exacto del detalle, no por el producto
+                var existingDetail = orderDetails.FirstOrDefault(od => od.Id == incoming.Id);
+
+                if (existingDetail != null)
+                {
+                    // El detalle existe (se creó antes o se sincronizó antes), lo actualizamos
+                    existingDetail.Update(incoming.Quantity, incoming.ProductId);
+                }
+                else
+                {
+                    // Es un detalle totalmente nuevo creado offline, lo agregamos respetando su ID
+                    orderDetails.Add(new OrderDetail(incoming.Id, incoming.Quantity, this.Id, incoming.ProductId));
+                }
+            }
+        }
+
+        public void AddDetail(Guid detailId, Guid productId, int quantity)
+        {
+            // Usamos el constructor de OrderDetail que ya configuramos antes
+            orderDetails.Add(new OrderDetail(detailId, quantity, this.Id, productId ));
+        }
     }
 }

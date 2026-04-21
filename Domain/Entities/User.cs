@@ -1,30 +1,23 @@
-﻿using System.Reflection.Metadata;
-
-namespace eternal_api.Domain.Entities
+﻿namespace eternal_api.Domain.Entities
 {
     public class User
     {
-        // ID único del usuario
         public Guid Id { get; set; }
-
-        // Nombre del usuario
         public string Name { get; set; }
-
-        // Apellido del usuario
         public string LastName { get; set; }
-
-        // Rol del usuario (Vendedor o Administrador)
         public string Rol { get; set; }
-
-        // Teléfono del usuario
         public string Phone { get; set; }
-
-        // Relación con la entidad City
-        public Guid CityId { get; set; }
-        
         public bool IsActive { get; set; } = true;
 
-        public User(string name, string lastName, string rol, string phone, Guid cityId)
+        public string IdentityUserId { get; set; }
+
+        // 1. EL CAMBIO VITAL: Guid? para hacerlo opcional
+        public Guid? SalesRouteId { get; set; }
+        public SalesRoute? SalesRoute { get; set; }
+
+        private User() { }
+
+        public User(string name, string lastName, string rol, string phone, string identityUserId)
         {
             Id = Guid.NewGuid();
             IsActive = true;
@@ -32,21 +25,32 @@ namespace eternal_api.Domain.Entities
             LastName = lastName;
             Rol = rol;
             Phone = phone;
-            CityId = cityId;
+            IdentityUserId = identityUserId;
+            // No asignamos SalesRouteId aquí, nace en null
         }
 
-        public void Update(string name, string lastName, string rol, string phone, Guid cityId) 
+        public void Update(string name, string lastName, string rol, string phone)
         {
             Name = name;
             LastName = lastName;
             Rol = rol;
             Phone = phone;
-            CityId = cityId;
         }
 
         public void Desactivate()
         {
-            IsActive = false;
+            IsActive = !IsActive;
+        }
+
+        // 2. Método exclusivo para cuando hagas el Update de la ruta
+        public void AssignRoute(Guid routeId)
+        {
+            SalesRouteId = routeId;
+        }
+
+        public void RemoveRoute()
+        {
+            SalesRouteId = null;
         }
     }
 }

@@ -1,0 +1,20 @@
+@startuml
+class Store {
+    + Id : Guid <<get>> <<set>>
+    + StoreNumber : string <<get>> <<set>>
+    + ZoneNumber : string <<get>> <<set>>
+    + ZipCode : string <<get>> <<set>>
+    + Name : string? <<get>> <<set>>
+    + Street : string <<get>> <<set>>
+    + IsActive : bool <<get>> <<set>>
+    + HasPlanogram : bool <<get>> <<set>>
+    + CityId : Guid <<get>> <<set>>
+    + City : City <<get>> <<set>>
+    + DistrictId : Guid <<get>> <<set>>
+    + District : District <<get>> <<set>>
+    + Store()
+    + Store(storeNumber:string, zoneNumber:string, zipCode:string, name:string?, street:string, hasPlanogram:bool, cityId:Guid, districtId:Guid)
+    + Update(storeNumber:string, zoneNumber:string, zipCode:string, name:string?, street:string, hasPlanogram:bool, cityId:Guid, districtId:Guid) : void
+    + Desactivate() : void
+}
+@enduml

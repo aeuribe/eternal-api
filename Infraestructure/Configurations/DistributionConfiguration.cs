@@ -38,7 +38,8 @@ namespace eternal_api.Infraestructure.Configurations
                 .HasForeignKey(e => e.PlanogramId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne<Product>() // suponiendo que existe la entidad Product
+            // 👇 LA CORRECCIÓN VA AQUÍ 👇
+            builder.HasOne(e => e.Product) // Enlazamos explícitamente la propiedad de la clase
                 .WithMany()
                 .HasForeignKey(e => e.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);

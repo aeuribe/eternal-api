@@ -1,11 +1,12 @@
-﻿using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Orders.Commands.CreateOrder;
+using eternal_api.Application.Planograms.Interfaces;
 using eternal_api.Domain.Entities;
 using eternal_api.Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace eternal_api.Infraestructure.Repositories
 {
-    public class PlanogramRepository : IPlanogramRepository
+    public class PlanogramRepository : IPlanogramRepository, IPlanogramProvider
     {
         public readonly AppDbContext _context;
 
@@ -35,6 +36,12 @@ namespace eternal_api.Infraestructure.Repositories
         public async Task<Planogram?> GetPlanogramById(Guid id)
         {
             return await _context.Planograms.FindAsync(id);
+        }
+        public async Task<Planogram?> GetActivePlanogramAsync()
+        {
+            return await _context.Planograms
+                .AsNoTracking() 
+                .FirstOrDefaultAsync(p => p.isActive);
         }
 
         public async Task UpdateAsync(Planogram planogram)

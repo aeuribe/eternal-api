@@ -14,7 +14,7 @@ namespace eternal_api.WebAPI.Endpoints
             app.MapPost("/cities", async (CreateCityCommand command, IMediator mediator) =>
             {
                 var result = await mediator.Send(command);
-                return Results.Created($"/cities/{result}", result);
+                return Results.Created($"/{result}", result);
             });
 
             app.MapPut("/cities/{id:guid}", async (Guid id, UpdateCityCommand command, IMediator mediator) =>

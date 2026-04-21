@@ -1,0 +1,15 @@
+@startuml
+class SalesRoute {
+    + Id : Guid <<get>> <<set>>
+    + Code : string <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + IsActive : bool <<get>> <<set>>
+    + CityId : Guid <<get>> <<set>>
+    + City : City <<get>> <<set>>
+    + SalesRoute()
+    + SalesRoute(name:string, code:string, cityId:Guid)
+    + Update(name:string, cityId:Guid, code:string) : void
+    + UpdateName(name:string) : void
+    + ToogleStatus() : void
+}
+@enduml

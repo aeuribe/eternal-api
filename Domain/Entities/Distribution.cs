@@ -17,6 +17,8 @@
         // Referencia foránea al producto
         public Guid ProductId { get; set; }
 
+        public Product Product { get; set; }
+
         public Distribution(Guid productId, Guid planogramId, int Xposition, int Yposition)
         {
             ProductId = productId;

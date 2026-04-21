@@ -1,0 +1,15 @@
+@startuml
+class Presentation {
+    + Id : Guid <<get>> <<set>>
+    + GenericCode : string <<get>> <<set>>
+    + Volume : decimal? <<get>> <<set>>
+    + Unit : string? <<get>> <<set>>
+    + IsActive : bool <<get>> <<set>> = true
+    + FamilyId : Guid <<get>> <<set>>
+    + Family : Family <<get>> <<set>>
+    + Presentation()
+    + Presentation(genericCode:string, volume:decimal?, unit:string?, familyId:Guid)
+    + Update(genericCode:string, volume:decimal?, unit:string?, familyId:Guid) : void
+    + ToggleStatus() : void
+}
+@enduml

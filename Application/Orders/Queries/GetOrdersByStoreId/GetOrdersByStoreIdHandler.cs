@@ -1,24 +1,25 @@
-﻿using MediatR;
-using eternal_api.Application.Common.DTOs;
-using eternal_api.Application.Common.Exceptions;
-using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Common.Exceptions;
+using eternal_api.Application.Orders.Interfaces;
+using eternal_api.Application.Orders.Queries.DTOs;
+using eternal_api.Domain.Entities;
+using MediatR;
 
 namespace eternal_api.Application.Orders.Queries.GetOrdersByStoreId
 {
     public class GetOrdersByStoreIdHandler : IRequestHandler< GetOrdersByStoreIdQuery, IEnumerable<OrderDto>>
     {
-        public readonly IOrderRepository _orderRepository;
-        public readonly IStoreRepository _storeRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IStoreValidationService _storeValidator;
 
-        public GetOrdersByStoreIdHandler(IOrderRepository orderRepository, IStoreRepository storeRepository)
+        public GetOrdersByStoreIdHandler(IOrderRepository orderRepository, IStoreValidationService storeValidator)
         {
             _orderRepository = orderRepository;
-            _storeRepository = storeRepository;
+            _storeValidator = storeValidator;
         }
 
         public async Task<IEnumerable<OrderDto>> Handle(GetOrdersByStoreIdQuery query, CancellationToken cancellationToken)
         {
-            if(! await _storeRepository.ExistsAsync(query.StoreId))
+            if(! await _storeValidator.ExistsAsync(query.StoreId))
             {
                 throw new NotFoundException("Store", query.StoreId);
             }
@@ -32,7 +33,15 @@ namespace eternal_api.Application.Orders.Queries.GetOrdersByStoreId
                 StoreId = o.StoreId,
                 CreatedAt = o.CreatedAt,
                 PO = o.PO,
-                Status = o.Status
+                Status = o.Status,
+                PlanogramId = o.PlanogramId,
+
+                Items = o.orderDetails?.Select(d => new OrderDetailDto
+                {
+                    OrderDetailId = d.Id,
+                    ProductId = d.ProductId,
+                    Quantity = d.Quantity
+                }).ToList() ?? new List<OrderDetailDto>()
             }).ToList();
         }
     }

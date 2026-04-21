@@ -1,0 +1,13 @@
+@startuml
+class OrderDetail {
+    + Id : Guid <<get>> <<set>>
+    + Quantity : int <<get>> <<set>>
+    + OrderId : Guid <<get>> <<set>>
+    + ProductId : Guid <<get>> <<set>>
+    + Order : Order <<get>> <<set>>
+    + Product : Product <<get>> <<set>>
+    + OrderDetail()
+    + OrderDetail(id:Guid, quantity:int, orderId:Guid, productId:Guid)
+    + Update(quantity:int, productId:Guid) : void
+}
+@enduml

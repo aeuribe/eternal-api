@@ -1,5 +1,5 @@
-﻿using eternal_api.Application.Common.DTOs;
-using eternal_api.Application.Common.Interfaces;
+﻿
+using eternal_api.Application.Stores.Queries.DTOs;
 using MediatR;
 namespace eternal_api.Application.Stores.Queries.ListStores
 {

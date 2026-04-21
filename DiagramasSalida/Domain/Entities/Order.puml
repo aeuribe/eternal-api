@@ -1,0 +1,25 @@
+@startuml
+class Order {
+    + Id : Guid <<get>> <<set>>
+    + CreatedAt : DateTime <<get>> <<set>>
+    + PO : string? <<get>>
+    + Status : OrderStatus <<get>>
+    + SalespersonId : Guid <<get>> <<set>>
+    + Salesperson : User <<get>> <<set>>
+    + StoreId : Guid <<get>> <<set>>
+    + Store : Store <<get>> <<set>>
+    + PlanogramId : Guid <<get>> <<set>>
+    + Planogram : Planogram? <<get>> <<set>>
+    + SalesRouteId : Guid <<get>> <<set>>
+    + SalesRoute : SalesRoute <<get>> <<set>>
+    + orderDetails : ICollection<OrderDetail> <<get>>
+    + Order()
+    + Order(id:Guid, salespersonId:Guid, storeId:Guid, planogramId:Guid, po:string?, salesRouteId:Guid)
+    + UpdateStore(storeId:Guid) : void
+    + UpdatePo(po:string?) : void
+    + MarkAsInvoiced() : void
+    + MarkAsCanceled() : void
+    + UpdateDetails(incomingItems:IEnumerable<(Guid Id, Guid ProductId, int Quantity)>) : void
+    + AddDetail(detailId:Guid, productId:Guid, quantity:int) : void
+}
+@enduml

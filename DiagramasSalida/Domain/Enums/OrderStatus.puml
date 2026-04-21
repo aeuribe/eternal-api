@@ -1,0 +1,7 @@
+@startuml
+enum OrderStatus {
+    Created= 1,
+    Invoiced= 2,
+    Canceled= 3,
+}
+@enduml

@@ -1,10 +1,9 @@
-﻿using eternal_api.Application.Common.Interfaces;
-using eternal_api.Application.Products.Commands.CreateProduct;
+﻿using eternal_api.Application.Products.Commands.CreateProduct;
+using eternal_api.Application.Products.Commands.DeactivateProduct; // <-- Agregado para el nuevo comando
 using eternal_api.Application.Products.Commands.DeleteProduct;
 using eternal_api.Application.Products.Commands.UpdateProduct;
 using eternal_api.Application.Products.Queries.GetAllProducts;
 using eternal_api.Application.Products.Queries.GetProductById;
-using eternal_api.Application.Products.Queries.GetProductsByCategory;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +17,7 @@ namespace eternal_api.WebAPI.Endpoints
             app.MapPost("/products", async (CreateProductCommand command, [FromServices] IMediator mediator) =>
             {
                 var result = await mediator.Send(command);
-                return Results.Created($"/products/{result}", result);
+                return Results.Created($"/{result}", result);
             });
 
             // Obtener Producto por Id
@@ -53,20 +52,36 @@ namespace eternal_api.WebAPI.Endpoints
                     : Results.NotFound();   // 404 si no existe el recurso
             });
 
-            // Eliminar
+            // Eliminar (Borrado Físico con validación de regla de negocio)
             app.MapDelete("/products/{id:guid}", async (Guid id, IMediator mediator) =>
             {
-                var command = new DeleteProductCommand() {Id = id } ;
-                var result = await mediator.Send(command);
-                return result ? Results.NoContent() : Results.NotFound();
+                try
+                {
+                    var command = new DeleteProductCommand() { Id = id };
+                    var result = await mediator.Send(command);
+                    return result ? Results.NoContent() : Results.NotFound();
+                }
+                catch (InvalidOperationException ex)
+                {
+                    // Atrapa la excepción de negocio si pertenece a un planograma con órdenes
+                    return Results.BadRequest(new { message = ex.Message });
+                }
             });
 
-            // Por categoría
-            app.MapGet("products/category/{category}", async ([FromQuery] string category, IMediator mediator) =>
+            // Desactivar (Borrado Lógico / Soft Delete con validación)
+            app.MapPatch("/products/{id:guid}/deactivate", async (Guid id, IMediator mediator) =>
             {
-                var query = new GetProductsByCategoryQuery() {Category = category };
-                var result = await mediator.Send(query);
-                return Results.Ok(result);
+                try
+                {
+                    var command = new DeactivateProductCommand { Id = id };
+                    var result = await mediator.Send(command);
+                    return result ? Results.NoContent() : Results.NotFound();
+                }
+                catch (InvalidOperationException ex)
+                {
+                    // Atrapa la excepción de negocio si pertenece a un planograma activo
+                    return Results.BadRequest(new { message = ex.Message });
+                }
             });
 
             return app;

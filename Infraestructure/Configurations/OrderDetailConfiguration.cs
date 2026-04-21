@@ -32,15 +32,16 @@ namespace eternal_api.Infraestructure.Configurations
                 .IsRequired();
 
             // Relaciones
-            builder.HasOne<Order>() // relación con Order
-                .WithMany(o => o.orderDetails) // asumiendo que Order tiene ICollection<OrderDetail>
-                .HasForeignKey(e => e.OrderId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(d => d.Order)           // El hijo tiene UNA orden
+                    .WithMany(o => o.orderDetails)    // El padre tiene MUCHOS detalles
+                    .HasForeignKey(d => d.OrderId)    // La llave es OrderId (sin el 1)
+                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne<Product>() // relación con Product
-                .WithMany() // si Product no tiene colección de OrderDetails
-                .HasForeignKey(e => e.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // Partimos del detalle (Muchos) hacia el Producto (Uno)
+            builder.HasOne(d => d.Product)       // El detalle tiene UN Producto
+                .WithMany()                      // El Producto tiene MUCHOS detalles (pero no los exponemos en la clase Product)
+                .HasForeignKey(d => d.ProductId) // La llave foránea es ProductId
+                .OnDelete(DeleteBehavior.Restrict); // No dejamos borrar productos con órdenes vivas
         }
     }
 }

@@ -16,15 +16,11 @@ namespace eternal_api.Infraestructure.Configurations
                 .IsRequired()
                 .HasMaxLength(100);
 
+            // Configuramos el Enum para que se guarde como string (ej. "FL", "TX")
             builder.Property(c => c.State)
+                .HasConversion<string>()
                 .IsRequired()
-                .HasMaxLength(100);
-
-            builder.Property(c => c.Country)
-                .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(2); // Sabemos que los prefijos de estado de EE. UU. son siempre de 2 letras
         }
     }
-
-
 }

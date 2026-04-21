@@ -1,11 +1,12 @@
-﻿using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Orders.Queries.GetOrdersByStoreId;
+using eternal_api.Application.Stores.Interfaces;
 using eternal_api.Domain.Entities;
 using eternal_api.Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace eternal_api.Infraestructure.Repositories
 {
-    public class StoreRepository : IStoreRepository
+    public class StoreRepository : IStoreRepository, IStoreValidationService
     {
         private readonly AppDbContext _context;
         public StoreRepository(AppDbContext context) => _context = context;
@@ -29,15 +30,35 @@ namespace eternal_api.Infraestructure.Repositories
             await _context.Stores.FirstOrDefaultAsync(s => s.Name == name);
 
         public async Task<List<Store>> GetByCityAsync(Guid cityId) =>
-            await _context.Stores.Where(s => s.CityId == cityId).ToListAsync();
+            await _context.Stores
+                .AsNoTracking()
+                .Where(s => s.CityId == cityId)
+                .ToListAsync();
 
         public async Task<List<Store>> ListAsync() =>
-            await _context.Stores.ToListAsync();
+            await _context.Stores
+                .AsNoTracking()
+                .ToListAsync();
 
         public async Task<bool> ExistsAsync(Guid id)
         {
             return await _context.Stores.AnyAsync(o => o.Id == id);
         }
-    }
 
+        // IMPLEMENTACIÓN NUEVA
+        public async Task<Store?> GetByStoreNumberAsync(string storeNumber)
+        {
+            return await _context.Stores
+                .FirstOrDefaultAsync(s => s.StoreNumber == storeNumber);
+        }
+
+        // IMPLEMENTACIÓN NUEVA
+        public async Task<List<Store>> GetByDistrictAsync(Guid districtId)
+        {
+            return await _context.Stores
+                .AsNoTracking()
+                .Where(s => s.DistrictId == districtId)
+                .ToListAsync();
+        }
+    }
 }

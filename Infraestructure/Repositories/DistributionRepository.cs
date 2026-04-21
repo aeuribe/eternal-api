@@ -1,11 +1,12 @@
-﻿using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Distributions.Interfaces;
+using eternal_api.Application.Planograms.Commands.UpdatePlanogram;
 using eternal_api.Domain.Entities;
 using eternal_api.Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace eternal_api.Infraestructure.Repositories
 {
-    public class DistributionRepository : IDistributionRepository
+    public class DistributionRepository : IDistributionRepository, IValidateOrdersService
     {
         private readonly AppDbContext _context;
 
@@ -47,6 +48,11 @@ namespace eternal_api.Infraestructure.Repositories
         {
             _context.Distributions.Remove(distribution);
             await _context.SaveChangesAsync();
+        }
+        public async Task<bool> HasOrdersInPlanogramAsync(Guid planogramId)
+        {
+            return await _context.Orders
+                .AnyAsync(order => order.PlanogramId == planogramId);
         }
     }
 }

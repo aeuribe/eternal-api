@@ -1,0 +1,11 @@
+@startuml
+class InvoiceDetail {
+    + Id : Guid <<get>> <<set>>
+    + Quantity : int <<get>> <<set>>
+    + Subtotal : decimal <<get>> <<set>>
+    + InvoiceId : Guid <<get>> <<set>>
+    + ProductId : Guid <<get>> <<set>>
+    + InvoiceDetail(id:Guid, invoiceId:Guid, productId:Guid, quantity:int, subtotal:decimal)
+    + Update(invoiceId:Guid, productId:Guid, quantity:int, subtotal:decimal) : void
+}
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+class Distribution {
+    + Id : Guid <<get>> <<set>>
+    + Xposition : int <<get>> <<set>>
+    + Yposition : int <<get>> <<set>>
+    + PlanogramId : Guid <<get>> <<set>>
+    + ProductId : Guid <<get>> <<set>>
+    + Product : Product <<get>> <<set>>
+    + Distribution(productId:Guid, planogramId:Guid, Xposition:int, Yposition:int)
+    + Update(productId:Guid, planogramId:Guid, Xpos:int, Ypos:int) : void
+}
+@enduml

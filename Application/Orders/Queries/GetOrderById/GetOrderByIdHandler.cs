@@ -1,14 +1,14 @@
 ﻿using MediatR;
-using eternal_api.Application.Common.DTOs;
 using eternal_api.Application.Common.Exceptions;
-using eternal_api.Application.Common.Interfaces;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using eternal_api.Application.Orders.Queries.DTOs;
+using eternal_api.Application.Orders.Interfaces;
 
 namespace eternal_api.Application.Orders.Queries.GetOrderById
 {
     public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, OrderDto>
     {
-        public readonly IOrderRepository _orderRepository;
+        private readonly IOrderRepository _orderRepository;
 
         public GetOrderByIdHandler(IOrderRepository orderRepository)
         {
@@ -17,11 +17,12 @@ namespace eternal_api.Application.Orders.Queries.GetOrderById
 
         public async Task<OrderDto> Handle(GetOrderByIdQuery query, CancellationToken cancellationToken)
         {
-            if (!await _orderRepository.ExistsAsync(query.OrderId))
+            var order = await _orderRepository.GetByIdAsync(query.OrderId);
+            if (order == null)
             {
                 throw new NotFoundException("Order", query.OrderId);
             }
-            var order = await _orderRepository.GetByIdAsync(query.OrderId);
+
             return new OrderDto
             {
                 OrderId = order.Id,
@@ -29,7 +30,15 @@ namespace eternal_api.Application.Orders.Queries.GetOrderById
                 StoreId = order.StoreId,
                 CreatedAt = order.CreatedAt,
                 PO = order.PO,
-                Status = order.Status
+                Status = order.Status,
+                PlanogramId = order.PlanogramId,
+
+                Items = order.orderDetails?.Select(d => new OrderDetailDto
+                {
+                    OrderDetailId = d.Id,
+                    ProductId = d.ProductId,
+                    Quantity = d.Quantity
+                }).ToList() ?? new List<OrderDetailDto>()
             };
             
         } 

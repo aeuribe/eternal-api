@@ -1,6 +1,6 @@
 ﻿using eternal_api.Domain.Entities;
-using eternal_api.Application.Common.Interfaces;
 using MediatR;
+using eternal_api.Application.Stores.Interfaces;
 
 namespace eternal_api.Application.Stores.Commands.CreateStore
 {
@@ -15,10 +15,20 @@ namespace eternal_api.Application.Stores.Commands.CreateStore
 
         public async Task<Guid> Handle(CreateStoreCommand command, CancellationToken cancellationToken)
         {
-            var store = new Store(command.Name, command.Address, command.CityId);
+            // Instanciamos usando el nuevo constructor de la entidad
+            var store = new Store(
+                command.StoreNumber,
+                command.ZoneNumber,
+                command.ZipCode,
+                command.Name,
+                command.Street,
+                command.HasPlanogram,
+                command.CityId,
+                command.DistrictId
+            );
+
             await _storeRepository.AddAsync(store);
             return store.Id;
         }
     }
-
 }

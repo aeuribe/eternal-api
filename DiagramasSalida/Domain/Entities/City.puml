@@ -1,0 +1,10 @@
+@startuml
+class City {
+    + Id : Guid <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + State : StateUsEnum <<get>> <<set>>
+    + City()
+    + City(name:string, state:StateUsEnum)
+    + Update(name:string, state:StateUsEnum) : void
+}
+@enduml

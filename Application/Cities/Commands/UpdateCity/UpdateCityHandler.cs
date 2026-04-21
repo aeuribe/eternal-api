@@ -1,4 +1,4 @@
-﻿using eternal_api.Application.Common.Interfaces;
+﻿using eternal_api.Application.Cities.Interfaces;
 using MediatR;
 
 namespace eternal_api.Application.Cities.Commands.UpdateCity
@@ -17,11 +17,11 @@ namespace eternal_api.Application.Cities.Commands.UpdateCity
             var city = await _cityRepository.GetByIdAsync(command.Id);
             if (city is null) return false;
 
-            city.Update(command.Name, command.State, command.Country);
+            // Actualizamos la entidad con la nueva firma
+            city.Update(command.Name, command.State);
 
             await _cityRepository.UpdateAsync(city);
             return true;
         }
     }
-
 }

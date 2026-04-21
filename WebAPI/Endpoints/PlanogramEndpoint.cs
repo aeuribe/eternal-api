@@ -1,11 +1,11 @@
-﻿using eternal_api.Application.Common.Interfaces;
+﻿
 using eternal_api.Application.Planograms.Commands.CreatePlanogram;
 using eternal_api.Application.Planograms.Queries.GetPlanogramById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using eternal_api.Application.Planograms.Queries.GetAllPlanograms;
 using eternal_api.Application.Planograms.Commands.UpdatePlanogram;
-using eternal_api.Application.Planograms.Commands.DeletePlanogram;
+using eternal_api.Application.Planograms.Commands.DesactivatePlanogram;
 
 namespace eternal_api.WebAPI.Endpoints
 {
@@ -17,7 +17,7 @@ namespace eternal_api.WebAPI.Endpoints
             app.MapPost("/planograms", async (CreatePlanogramCommand command, [FromServices] IMediator mediator) =>
             {
                 var result = await mediator.Send(command);
-                return Results.Created($"/planograms/{result}", result);
+                return Results.Created($"/{result}", result);
             });
 
             // Obtener planograma por Id
@@ -52,10 +52,10 @@ namespace eternal_api.WebAPI.Endpoints
                     : Results.NotFound();   // 404 si no existe el recurso
             });
 
-            // Eliminar
-            app.MapDelete("/planograms/{id:guid}", async (Guid id, IMediator mediator) =>
+            // Desactivar
+            app.MapPut("/planograms/desactivate/{id:guid}", async (Guid id, IMediator mediator) =>
             {
-                var command = new DeletePlanogramCommand() { Id = id };
+                var command = new DesactivatePlanogramCommand() { Id = id };
                 var result = await mediator.Send(command);
                 return result ? Results.NoContent() : Results.NotFound();
             });

@@ -1,7 +1,7 @@
-﻿using eternal_api.Application.Common.DTOs;
+﻿using eternal_api.Application.Cities.Interfaces;
+using eternal_api.Application.Cities.Queries.DTOs;
 using eternal_api.Application.Common.Exceptions;
-using eternal_api.Application.Common.Interfaces;
-using eternal_api.Infraestructure.Repositories;
+using eternal_api.Domain.Enums; // <-- Necesario
 using MediatR;
 
 namespace eternal_api.Application.Cities.Queries.GetCityByIdQuery
@@ -10,27 +10,29 @@ namespace eternal_api.Application.Cities.Queries.GetCityByIdQuery
     {
         private readonly ICityRepository _cityRepository;
 
-        public GetCityByIdHandler(ICityRepository cityRepository) 
+        public GetCityByIdHandler(ICityRepository cityRepository)
         {
             _cityRepository = cityRepository;
         }
 
         public async Task<CityDto> Handle(GetCityByIdQuery query, CancellationToken cancellationToken)
         {
-            if (!await _cityRepository.ExistsAsync(query.Id))
+            // Optimización: Un solo viaje a la base de datos
+            var city = await _cityRepository.GetByIdAsync(query.Id);
+
+            if (city is null)
             {
                 throw new NotFoundException("City", query.Id);
             }
 
-            var city = await _cityRepository.GetByIdAsync(query.Id);
             return new CityDto
             {
                 Id = city.Id,
                 Name = city.Name,
-                State = city.State,
-                Country = city.Country
+                StatePrefix = city.State.GetPrefix(),
+                StateFullName = city.State.GetFullName(),
+                Country = "USA"
             };
         }
     }
-
 }

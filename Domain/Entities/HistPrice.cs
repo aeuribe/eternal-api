@@ -15,11 +15,11 @@
         public decimal Price { get; set; } = 0;
 
         // Referencia foránea al producto
-        public Guid ProductId { get; set; }
+        public Guid PresentationId { get; set; }
 
-        public HistPrice(Guid productId, decimal value, DateTime startDate, DateTime? endDate = null)
+        public HistPrice(Guid presentationId, decimal value, DateTime startDate, DateTime? endDate )
         {
-            ProductId = productId;
+            PresentationId = presentationId;
             Price = value;
             StartDate = startDate;
             EndDate = endDate;
